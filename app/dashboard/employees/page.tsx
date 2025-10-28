@@ -53,7 +53,27 @@ export default function EmployeesPage() {
     zone_id: "",
     allowed_quota_liters: 100,
     allowed_zones: [] as string[],
+    // Driver License Fields
+    driver_license_number: "",
+    driver_license_expiry: "",
+    // Vehicle Assignment Fields
+    assigned_vehicle_reg_no: "",
+    assigned_vehicle_model: "",
+    ownership_type: "Company Owned",
+    lease_company: "",
+    lease_start: "",
+    lease_end: "",
+    handover_mileage: "",
+    condition_at_handover: "",
+    // App Settings
+    enableCamera: true,
+    requireLocation: true,
+    maxDailyClaims: 3,
+    requireNoncePhoto: true,
+    offlineMode: true,
   });
+
+  const [activeFormTab, setActiveFormTab] = useState("basic");
 
   // Fetch employees from API
   const fetchEmployees = async () => {
@@ -128,7 +148,22 @@ export default function EmployeesPage() {
         department: "Operations",
         zone_id: "",
         allowed_quota_liters: 100,
-        allowed_zones: []
+        allowed_zones: [],
+        driver_license_number: "",
+        driver_license_expiry: "",
+        assigned_vehicle_reg_no: "",
+        assigned_vehicle_model: "",
+        ownership_type: "Company Owned",
+        lease_company: "",
+        lease_start: "",
+        lease_end: "",
+        handover_mileage: "",
+        condition_at_handover: "",
+        enableCamera: true,
+        requireLocation: true,
+        maxDailyClaims: 3,
+        requireNoncePhoto: true,
+        offlineMode: true,
       });
       setShowAddModal(false);
       
@@ -357,115 +392,390 @@ export default function EmployeesPage() {
             borderRadius: '16px',
             padding: '32px',
             width: '90%',
-            maxWidth: '600px',
+            maxWidth: '900px',
             boxShadow: '0 20px 25px rgba(0,0,0,0.2)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#111827' }}>
-                Add New Employee
-              </h2>
-              <button onClick={() => setShowAddModal(false)}>
+              <h2 style={{ fontSize: '28px', fontWeight: '600', color: '#111827' }}>Add New Employee</h2>
+              <button onClick={() => {
+                setShowAddModal(false);
+                setActiveFormTab("basic");
+                setNewEmployee({
+                  name: "",
+                  email: "",
+                  phone: "",
+                  employee_code: "",
+                  role: "employee",
+                  department: "Operations",
+                  zone_id: "",
+                  allowed_quota_liters: 100,
+                  allowed_zones: [],
+                  driver_license_number: "",
+                  driver_license_expiry: "",
+                  assigned_vehicle_reg_no: "",
+                  assigned_vehicle_model: "",
+                  ownership_type: "Company Owned",
+                  lease_company: "",
+                  lease_start: "",
+                  lease_end: "",
+                  handover_mileage: "",
+                  condition_at_handover: "",
+                  enableCamera: true,
+                  requireLocation: true,
+                  maxDailyClaims: 3,
+                  requireNoncePhoto: true,
+                  offlineMode: true,
+                });
+              }}>
                 <X style={{ width: '24px', height: '24px', color: '#6b7280' }} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Employee Code *</label>
-                <input
-                  type="text"
-                  value={newEmployee.employee_code}
-                  onChange={(e) => setNewEmployee({ ...newEmployee, employee_code: e.target.value })}
-                  placeholder="EMP001"
-                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
-                />
-              </div>
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '2px solid #e5e7eb' }}>
+              <button
+                onClick={() => setActiveFormTab("basic")}
+                style={{
+                  padding: '12px 24px',
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '8px 8px 0 0',
+                  cursor: 'pointer',
+                  borderBottom: activeFormTab === "basic" ? '3px solid #2563eb' : 'none',
+                  color: activeFormTab === "basic" ? '#2563eb' : '#6b7280',
+                  fontWeight: activeFormTab === "basic" ? '600' : '400'
+                }}
+              >
+                👤 Basic Info
+              </button>
+              <button
+                onClick={() => setActiveFormTab("license")}
+                style={{
+                  padding: '12px 24px',
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '8px 8px 0 0',
+                  cursor: 'pointer',
+                  borderBottom: activeFormTab === "license" ? '3px solid #2563eb' : 'none',
+                  color: activeFormTab === "license" ? '#2563eb' : '#6b7280',
+                  fontWeight: activeFormTab === "license" ? '600' : '400'
+                }}
+              >
+                🚗 License & Vehicle
+              </button>
+              <button
+                onClick={() => setActiveFormTab("settings")}
+                style={{
+                  padding: '12px 24px',
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '8px 8px 0 0',
+                  cursor: 'pointer',
+                  borderBottom: activeFormTab === "settings" ? '3px solid #2563eb' : 'none',
+                  color: activeFormTab === "settings" ? '#2563eb' : '#6b7280',
+                  fontWeight: activeFormTab === "settings" ? '600' : '400'
+                }}
+              >
+                ⚙️ Settings
+              </button>
+            </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Full Name *</label>
-                <input
-                  type="text"
-                  value={newEmployee.name}
-                  onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
-                  placeholder="John Doe"
-                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
-                />
-              </div>
+            <div style={{ maxHeight: '60vh', overflow: 'auto', paddingRight: '8px' }}>
+              {/* Basic Info Tab */}
+              {activeFormTab === "basic" && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Full Name *</label>
+                      <input
+                        type="text"
+                        value={newEmployee.name}
+                        onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
+                        placeholder="Rajesh Kumar"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Employee Code *</label>
+                      <input
+                        type="text"
+                        value={newEmployee.employee_code}
+                        onChange={(e) => setNewEmployee({...newEmployee, employee_code: e.target.value})}
+                        placeholder="EMP001"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                  </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email *</label>
-                <input
-                  type="email"
-                  value={newEmployee.email}
-                  onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
-                  placeholder="john@ashrafsugar.com"
-                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
-                />
-              </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email *</label>
+                      <input
+                        type="email"
+                        value={newEmployee.email}
+                        onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
+                        placeholder="rajesh@asms.com"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Phone</label>
+                      <input
+                        type="tel"
+                        value={newEmployee.phone}
+                        onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})}
+                        placeholder="+92-300-1234567"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                  </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Phone</label>
-                  <input
-                    type="tel"
-                    value={newEmployee.phone}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
-                    placeholder="+92-300-1234567"
-                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
-                  />
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Role *</label>
+                      <select
+                        value={newEmployee.role}
+                        onChange={(e) => setNewEmployee({...newEmployee, role: e.target.value as any})}
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}
+                      >
+                        <option value="employee">Employee</option>
+                        <option value="approver">Approver</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Department</label>
+                      <input
+                        type="text"
+                        value={newEmployee.department}
+                        onChange={(e) => setNewEmployee({...newEmployee, department: e.target.value})}
+                        placeholder="Operations"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Monthly Fuel Quota (Liters) *</label>
+                    <input
+                      type="number"
+                      value={newEmployee.allowed_quota_liters}
+                      onChange={(e) => setNewEmployee({...newEmployee, allowed_quota_liters: parseFloat(e.target.value)})}
+                      placeholder="100"
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                    />
+                  </div>
+
+                  <div style={{ 
+                    background: '#eff6ff', 
+                    padding: '12px', 
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <KeyRound style={{ width: '20px', height: '20px', color: '#3b82f6' }} />
+                    <span style={{ fontSize: '13px', color: '#1e40af' }}>
+                      Username and password will be auto-generated and shown after creation
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Department</label>
-                  <input
-                    type="text"
-                    value={newEmployee.department}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, department: e.target.value })}
-                    placeholder="Operations"
-                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
-                  />
-                </div>
-              </div>
+              )}
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Role *</label>
-                  <select
-                    value={newEmployee.role}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value as any })}
-                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}
-                  >
-                    <option value="employee">Employee</option>
-                    <option value="approver">Approver</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Monthly Quota (Liters)</label>
-                  <input
-                    type="number"
-                    value={newEmployee.allowed_quota_liters}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, allowed_quota_liters: parseFloat(e.target.value) })}
-                    placeholder="100"
-                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
-                  />
-                </div>
-              </div>
+              {/* License & Vehicle Tab */}
+              {activeFormTab === "license" && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '8px' }}>Driver License</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>License Number</label>
+                      <input
+                        type="text"
+                        value={newEmployee.driver_license_number}
+                        onChange={(e) => setNewEmployee({...newEmployee, driver_license_number: e.target.value})}
+                        placeholder="PK-12345-67"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Expiry Date</label>
+                      <input
+                        type="date"
+                        value={newEmployee.driver_license_expiry}
+                        onChange={(e) => setNewEmployee({...newEmployee, driver_license_expiry: e.target.value})}
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                  </div>
 
-              <div style={{ 
-                background: '#eff6ff', 
-                padding: '12px', 
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <KeyRound style={{ width: '20px', height: '20px', color: '#3b82f6' }} />
-                <span style={{ fontSize: '13px', color: '#1e40af' }}>
-                  Username and password will be auto-generated
-                </span>
-              </div>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginTop: '16px', marginBottom: '8px' }}>Assigned Vehicle</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Registration Number</label>
+                      <input
+                        type="text"
+                        value={newEmployee.assigned_vehicle_reg_no}
+                        onChange={(e) => setNewEmployee({...newEmployee, assigned_vehicle_reg_no: e.target.value})}
+                        placeholder="ABC-123"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Model</label>
+                      <input
+                        type="text"
+                        value={newEmployee.assigned_vehicle_model}
+                        onChange={(e) => setNewEmployee({...newEmployee, assigned_vehicle_model: e.target.value})}
+                        placeholder="Toyota Corolla"
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                      />
+                    </div>
+                  </div>
 
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Ownership Type</label>
+                    <select
+                      value={newEmployee.ownership_type}
+                      onChange={(e) => setNewEmployee({...newEmployee, ownership_type: e.target.value})}
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}
+                    >
+                      <option value="Company Owned">Company Owned</option>
+                      <option value="Leased">Leased</option>
+                    </select>
+                  </div>
+
+                  {newEmployee.ownership_type === "Leased" && (
+                    <>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Lease Company</label>
+                        <input
+                          type="text"
+                          value={newEmployee.lease_company}
+                          onChange={(e) => setNewEmployee({...newEmployee, lease_company: e.target.value})}
+                          placeholder="ABC Lease Co"
+                          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                        />
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Lease Start</label>
+                          <input
+                            type="date"
+                            value={newEmployee.lease_start}
+                            onChange={(e) => setNewEmployee({...newEmployee, lease_start: e.target.value})}
+                            style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Lease End</label>
+                          <input
+                            type="date"
+                            value={newEmployee.lease_end}
+                            onChange={(e) => setNewEmployee({...newEmployee, lease_end: e.target.value})}
+                            style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Handover Mileage</label>
+                    <input
+                      type="number"
+                      value={newEmployee.handover_mileage}
+                      onChange={(e) => setNewEmployee({...newEmployee, handover_mileage: e.target.value})}
+                      placeholder="25000"
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Condition at Handover</label>
+                    <textarea
+                      value={newEmployee.condition_at_handover}
+                      onChange={(e) => setNewEmployee({...newEmployee, condition_at_handover: e.target.value})}
+                      placeholder="Excellent condition, minor scratches on bumper"
+                      rows={3}
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Settings Tab */}
+              {activeFormTab === "settings" && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '8px' }}>App Restrictions & Settings</h3>
+                  
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '12px', background: newEmployee.enableCamera ? '#f0fdf4' : '#f9fafb', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={newEmployee.enableCamera}
+                      onChange={(e) => setNewEmployee({...newEmployee, enableCamera: e.target.checked})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Enable Camera for Claims</span>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '12px', background: newEmployee.requireLocation ? '#f0fdf4' : '#f9fafb', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={newEmployee.requireLocation}
+                      onChange={(e) => setNewEmployee({...newEmployee, requireLocation: e.target.checked})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Require GPS Location</span>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '12px', background: newEmployee.requireNoncePhoto ? '#f0fdf4' : '#f9fafb', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={newEmployee.requireNoncePhoto}
+                      onChange={(e) => setNewEmployee({...newEmployee, requireNoncePhoto: e.target.checked})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Require Nonce Photo</span>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '12px', background: newEmployee.offlineMode ? '#f0fdf4' : '#f9fafb', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={newEmployee.offlineMode}
+                      onChange={(e) => setNewEmployee({...newEmployee, offlineMode: e.target.checked})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Enable Offline Mode</span>
+                  </label>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Max Daily Claims</label>
+                    <input
+                      type="number"
+                      value={newEmployee.maxDailyClaims}
+                      onChange={(e) => setNewEmployee({...newEmployee, maxDailyClaims: parseInt(e.target.value)})}
+                      placeholder="3"
+                      min="1"
+                      max="10"
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                    />
+                  </div>
+
+                  <div style={{ 
+                    background: '#fef3c7', 
+                    padding: '12px', 
+                    borderRadius: '8px',
+                    border: '1px solid #fbbf24'
+                  }}>
+                    <p style={{ fontSize: '12px', color: '#92400e' }}>
+                      💡 Note: These settings can be updated later in employee profile
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px', paddingTop: '24px', borderTop: '2px solid #e5e7eb' }}>
                 <button
                   onClick={() => setShowAddModal(false)}
                   style={{
@@ -493,7 +803,10 @@ export default function EmployeesPage() {
                     fontSize: '14px',
                     fontWeight: '600',
                     cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                    opacity: isSubmitting ? 0.6 : 1
+                    opacity: isSubmitting ? 0.6 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
                   }}
                 >
                   {isSubmitting ? 'Creating...' : 'Create Employee'}
