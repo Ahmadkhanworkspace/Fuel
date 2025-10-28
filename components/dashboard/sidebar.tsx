@@ -50,21 +50,22 @@ export default function Sidebar({ currentRole }: { currentRole?: string }) {
   return (
     <div style={{
       width: '256px',
-      backgroundColor: '#1e293b',
-      color: 'white',
+      backgroundColor: 'white',
+      color: '#202124',
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
-      boxShadow: '2px 0 10px rgba(0,0,0,0.1)'
+      boxShadow: '1px 0 3px 0 rgba(60,64,67,.3), 0 8px 24px 4px rgba(60,64,67,.15)',
+      borderRight: '1px solid #e8eaed'
     }}>
       {/* Logo */}
-      <div style={{ padding: '24px', borderBottom: '1px solid #334155' }}>
+      <div style={{ padding: '20px 16px', borderBottom: '1px solid #e8eaed' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             width: '40px',
             height: '40px',
-            background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
-            borderRadius: '12px',
+            background: '#1976d2',
+            borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -73,11 +74,10 @@ export default function Sidebar({ currentRole }: { currentRole?: string }) {
           </div>
           <div>
             <h1 style={{
-              fontSize: '20px',
-              fontWeight: 'bold',
-              background: 'linear-gradient(90deg, #3b82f6, #2563eb)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
+              fontSize: '22px',
+              fontWeight: 400,
+              color: '#202124',
+              margin: 0
             }}>
               ASMS
             </h1>
@@ -87,7 +87,7 @@ export default function Sidebar({ currentRole }: { currentRole?: string }) {
       </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: '12px', overflowY: 'auto' }}>
+      <nav style={{ flex: 1, padding: '8px', overflowY: 'auto' }}>
         {visibleNavigation.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -97,26 +97,38 @@ export default function Sidebar({ currentRole }: { currentRole?: string }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                padding: '12px 16px',
-                marginBottom: '4px',
-                borderRadius: '8px',
-                backgroundColor: isActive ? 'linear-gradient(90deg, #3b82f6, #2563eb)' : 'transparent',
-                color: isActive ? 'white' : '#cbd5e1',
+                padding: '10px 16px',
+                marginBottom: '2px',
+                borderRadius: '24px',
+                backgroundColor: isActive ? '#e8f0fe' : 'transparent',
+                color: isActive ? '#1967d2' : '#5f6368',
                 textDecoration: 'none',
-                transition: 'all 0.2s'
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = '#f8f9fa';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }
               }}
             >
-              <item.icon style={{ marginRight: '12px', width: '20px', height: '20px' }} />
-              <span style={{ fontSize: '14px', fontWeight: '500' }}>{item.name}</span>
+              <item.icon style={{ marginRight: '16px', width: '20px', height: '20px' }} />
+              <span style={{ fontSize: '14px', fontWeight: isActive ? 500 : 400, letterSpacing: 0 }}>
+                {item.name}
+              </span>
             </Link>
           );
         })}
       </nav>
 
       {/* Role Footer */}
-      <div style={{ padding: '16px', borderTop: '1px solid #334155', textAlign: 'center' }}>
-        <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-          Role: <span style={{ fontWeight: '600', color: '#cbd5e1' }}>{currentRole?.toUpperCase()}</span>
+      <div style={{ padding: '16px', borderTop: '1px solid #e8eaed', textAlign: 'center' }}>
+        <div style={{ fontSize: '13px', color: '#5f6368' }}>
+          Role: <span style={{ fontWeight: 500, color: '#202124' }}>{currentRole?.toUpperCase()}</span>
         </div>
       </div>
     </div>
