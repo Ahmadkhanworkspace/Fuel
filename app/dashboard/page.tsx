@@ -484,6 +484,273 @@ export default async function DashboardPage() {
             </p>
           </div>
         </div>
+
+        {/* Donut Chart - Vehicle Fuel Consumption */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '20px' }}>
+            Vehicle Fuel Consumption
+          </h3>
+          <div style={{ position: 'relative', width: '100%', height: '280px' }}>
+            {/* Donut Chart SVG */}
+            <svg width="100%" height="100%" viewBox="0 0 200 200" style={{ maxWidth: '300px', margin: '0 auto', display: 'block' }}>
+              {/* Outer Donut - Vehicle Types */}
+              <circle cx="100" cy="100" r="75" fill="none" stroke="#f3f4f6" strokeWidth="8" />
+              {/* SUV - 35% */}
+              <path d="M 100 100 L 100 25 A 75 75 0 1 1 49.9 87.4 Z" fill="#10b981" />
+              {/* Sedan - 30% */}
+              <path d="M 100 100 L 49.9 87.4 A 75 75 0 0 1 65 64.9 Z" fill="#3b82f6" />
+              {/* Hatchback - 20% */}
+              <path d="M 100 100 L 65 64.9 A 75 75 0 0 1 100 50.7 Z" fill="#f59e0b" />
+              {/* Truck/Van - 15% */}
+              <path d="M 100 100 L 100 50.7 A 75 75 0 0 1 137.4 62.6 Z" fill="#ef4444" />
+              {/* Center Circle */}
+              <circle cx="100" cy="100" r="50" fill="white" />
+              <text x="100" y="95" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#111827">Vehicles</text>
+              <text x="100" y="110" textAnchor="middle" fontSize="12" fill="#6b7280">24 Total</text>
+            </svg>
+            {/* Legend */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#10b981', borderRadius: '3px' }}></div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>SUV</div>
+                  <div style={{ fontSize: '11px', color: '#6b7280' }}>35% (8.4L)</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#3b82f6', borderRadius: '3px' }}></div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>Sedan</div>
+                  <div style={{ fontSize: '11px', color: '#6b7280' }}>30% (7.2L)</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#f59e0b', borderRadius: '3px' }}></div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>Hatchback</div>
+                  <div style={{ fontSize: '11px', color: '#6b7280' }}>20% (4.8L)</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#ef4444', borderRadius: '3px' }}></div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>Truck/Van</div>
+                  <div style={{ fontSize: '11px', color: '#6b7280' }}>15% (3.6L)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Top Employees by Fuel Usage */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '20px' }}>
+            Top Employees by Fuel Usage
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Employee 1 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'linear-gradient(90deg, #eff6ff, #dbeafe)', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', background: '#3b82f6', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>RK</div>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>Rajesh Kumar</div>
+                  <div style={{ fontSize: '12px', color: '#6b7280' }}>EMP001</div>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>1,865.5L</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹194,234</div>
+              </div>
+            </div>
+            {/* Employee 2 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'linear-gradient(90deg, #fef3c7, #fde68a)', borderRadius: '8px', border: '1px solid #fbbf24' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', background: '#f59e0b', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>PS</div>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>Priya Sharma</div>
+                  <div style={{ fontSize: '12px', color: '#6b7280' }}>EMP002</div>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#92400e' }}>1,247.8L</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹129,832</div>
+              </div>
+            </div>
+            {/* Employee 3 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'linear-gradient(90deg, #ecfdf5, #d1fae5)', borderRadius: '8px', border: '1px solid #86efac' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', background: '#059669', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>AP</div>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>Amit Patel</div>
+                  <div style={{ fontSize: '12px', color: '#6b7280' }}>EMP003</div>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#047857' }}>987.3L</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹102,832</div>
+              </div>
+            </div>
+            {/* Employee 4 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'linear-gradient(90deg, #f3e8ff, #e9d5ff)', borderRadius: '8px', border: '1px solid #c4b5fd' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', background: '#8b5cf6', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>SK</div>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>Sunil Kumar</div>
+                  <div style={{ fontSize: '12px', color: '#6b7280' }}>EMP004</div>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#6b21a8' }}>732.5L</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹76,234</div>
+              </div>
+            </div>
+            {/* Employee 5 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'linear-gradient(90deg, #fce7f3, #fbcfe8)', borderRadius: '8px', border: '1px solid #f9a8d4' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', background: '#ec4899', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>MT</div>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>Meera Thakur</div>
+                  <div style={{ fontSize: '12px', color: '#6b7280' }}>EMP005</div>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#be185d' }}>612.4L</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹63,734</div>
+              </div>
+            </div>
+          </div>
+          <div style={{ marginTop: '16px', padding: '12px', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+            <p style={{ fontSize: '12px', color: '#1e40af', textAlign: 'center' }}>
+              🏆 Top 5 employees ranked by total fuel consumption
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional Analytics Section */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+        {/* Monthly Fuel Cost Trends */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '20px' }}>
+            Monthly Fuel Cost Trends
+          </h3>
+          <div style={{ height: '280px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            {/* Line Chart Visual */}
+            <div style={{ position: 'relative', height: '200px', marginBottom: '20px' }}>
+              <svg width="100%" height="100%" viewBox="0 0 400 200" style={{ maxWidth: '100%' }}>
+                {/* Grid Lines */}
+                <line x1="40" y1="160" x2="360" y2="160" stroke="#e5e7eb" strokeWidth="1" />
+                <line x1="40" y1="120" x2="360" y2="120" stroke="#e5e7eb" strokeWidth="1" />
+                <line x1="40" y1="80" x2="360" y2="80" stroke="#e5e7eb" strokeWidth="1" />
+                <line x1="40" y1="40" x2="360" y2="40" stroke="#e5e7eb" strokeWidth="1" />
+                
+                {/* Cost Trend Line */}
+                <polyline 
+                  points="50,130 82,115 114,105 146,90 178,75 210,65 242,70 274,80 306,85 338,95" 
+                  fill="none" 
+                  stroke="#3b82f6" 
+                  strokeWidth="3"
+                />
+                {/* Dots */}
+                {[50,82,114,146,178,210,242,274,306,338].map((x, i) => (
+                  <circle key={i} cx={x} cy={[130,115,105,90,75,65,70,80,85,95][i]} r="4" fill="#3b82f6" />
+                ))}
+                
+                {/* Month Labels */}
+                <text x="50" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Jan</text>
+                <text x="82" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Feb</text>
+                <text x="114" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Mar</text>
+                <text x="146" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Apr</text>
+                <text x="178" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">May</text>
+                <text x="210" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Jun</text>
+                <text x="242" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Jul</text>
+                <text x="274" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Aug</text>
+                <text x="306" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Sep</text>
+                <text x="338" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Oct</text>
+              </svg>
+              <div style={{ position: 'absolute', top: '8px', right: '8px', background: '#eff6ff', padding: '6px 12px', borderRadius: '6px', border: '1px solid #bfdbfe' }}>
+                <span style={{ fontSize: '11px', color: '#1e40af', fontWeight: '600' }}>₹{(Math.random() * 200 + 180).toFixed(0)}K</span>
+              </div>
+            </div>
+            {/* Stats */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
+              <div>
+                <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Avg Monthly</div>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#111827' }}>₹178,234</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>This Month</div>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#059669' }}>₹195,450</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Vehicle Maintenance Calendar */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '20px' }}>
+            Upcoming Maintenance
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {/* Maintenance Item 1 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: '#fef3c7', borderRadius: '8px', border: '1px solid #fbbf24' }}>
+              <div style={{ width: '48px', height: '48px', background: '#f59e0b', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '20px' }}>🚗</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>Toyota Innova</div>
+                <div style={{ fontSize: '12px', color: '#78350f' }}>Oil Change - Due in 2 days</div>
+                <div style={{ fontSize: '11px', color: '#a16207', marginTop: '4px' }}>MH-12-AB-3456 • 31,250 km</div>
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#92400e' }}>15 Nov</div>
+            </div>
+
+            {/* Maintenance Item 2 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: '#ecfdf5', borderRadius: '8px', border: '1px solid #86efac' }}>
+              <div style={{ width: '48px', height: '48px', background: '#059669', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '20px' }}>🚙</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>Honda Civic</div>
+                <div style={{ fontSize: '12px', color: '#065f46' }}>Battery Check - Due in 5 days</div>
+                <div style={{ fontSize: '11px', color: '#059669', marginTop: '4px' }}>MH-12-CD-7890 • 28,900 km</div>
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#047857' }}>18 Nov</div>
+            </div>
+
+            {/* Maintenance Item 3 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+              <div style={{ width: '48px', height: '48px', background: '#3b82f6', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '20px' }}>🚐</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>Mahindra Bolero</div>
+                <div style={{ fontSize: '12px', color: '#1e40af' }}>Tire Inspection - Due in 7 days</div>
+                <div style={{ fontSize: '11px', color: '#2563eb', marginTop: '4px' }}>MH-12-EF-1234 • 22,450 km</div>
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#1e40af' }}>20 Nov</div>
+            </div>
+          </div>
+          <div style={{ marginTop: '16px', padding: '12px', background: '#fef3c7', borderRadius: '8px', border: '1px solid #fbbf24' }}>
+            <p style={{ fontSize: '12px', color: '#92400e', textAlign: 'center' }}>
+              📅 3 vehicles require maintenance this week
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Recent Activity & Quick Actions */}
@@ -499,8 +766,31 @@ export default async function DashboardPage() {
             <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>Recent Activity</h3>
             <p style={{ fontSize: '14px', color: '#6b7280' }}>Latest fuel claims and updates</p>
           </div>
-          <div style={{ marginTop: '24px', textAlign: 'center', padding: '32px', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-            <p style={{ fontSize: '14px', color: '#9ca3af' }}>Activity feed coming soon...</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '12px', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
+              <div style={{ width: '40px', height: '40px', background: '#dbeafe', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✓</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>Claim Approved</div>
+                <div style={{ fontSize: '12px', color: '#6b7280' }}>Rajesh Kumar submitted claim #182</div>
+                <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '4px' }}>2 minutes ago</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '12px', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
+              <div style={{ width: '40px', height: '40px', background: '#fef3c7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>!</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>New Claim Submitted</div>
+                <div style={{ fontSize: '12px', color: '#6b7280' }}>Priya Sharma - 45.5L at Mumbai Central</div>
+                <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '4px' }}>5 minutes ago</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '12px', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
+              <div style={{ width: '40px', height: '40px', background: '#fee2e2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>⚠</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827' }}>Zone Violation</div>
+                <div style={{ fontSize: '12px', color: '#6b7280' }}>Amit Patel claimed outside allowed zone</div>
+                <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '4px' }}>8 minutes ago</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -515,10 +805,11 @@ export default async function DashboardPage() {
             <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>Quick Actions</h3>
             <p style={{ fontSize: '14px', color: '#6b7280' }}>Common tasks and shortcuts</p>
           </div>
-          <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <p style={{ fontSize: '14px', color: '#6b7280' }}>• Approve pending claims</p>
-            <p style={{ fontSize: '14px', color: '#6b7280' }}>• View vehicle reports</p>
-            <p style={{ fontSize: '14px', color: '#6b7280' }}>• Export data</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <button style={{ padding: '12px', background: 'linear-gradient(135deg, #3b82f6, #2563eb)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>View Claims</button>
+            <button style={{ padding: '12px', background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>Export Data</button>
+            <button style={{ padding: '12px', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>View Reports</button>
+            <button style={{ padding: '12px', background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>Settings</button>
           </div>
         </div>
       </div>
