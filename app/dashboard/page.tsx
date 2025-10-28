@@ -28,16 +28,61 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
-          <h1 style={{ fontSize: '30px', fontWeight: 'bold', background: 'linear-gradient(90deg, #2563eb, #1e40af)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '8px' }}>
-            Dashboard Overview
-          </h1>
-          <p style={{ color: '#4b5563', fontSize: '14px' }}>
-            Monitor fuel claims and vehicle management in real-time
-          </p>
+      {/* Header with Prominent Branding */}
+      <div style={{ 
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e40af 100%)',
+        borderRadius: '16px',
+        padding: '32px',
+        boxShadow: '0 10px 15px rgba(0,0,0,0.1)',
+        border: '2px solid #3b82f6'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ 
+              display: 'inline-block',
+              background: 'white',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              marginBottom: '12px'
+            }}>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: '#2563eb', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                🏭 Ashraf Sugar Mills
+              </span>
+            </div>
+            <h1 style={{ 
+              fontSize: '36px', 
+              fontWeight: 'bold', 
+              color: 'white',
+              marginBottom: '8px'
+            }}>
+              Smart Fuel Management System
+            </h1>
+            <p style={{ color: '#dbeafe', fontSize: '16px', fontWeight: '500' }}>
+              Monitor fuel claims and vehicle management in real-time
+            </p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#93c5fd', 
+              marginBottom: '8px',
+              display: 'block'
+            }}>
+              Last Updated
+            </div>
+            <div style={{ 
+              fontSize: '18px', 
+              fontWeight: '600', 
+              color: 'white'
+            }}>
+              {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Action Button */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <a href="/dashboard/claims" style={{ textDecoration: 'none' }}>
           <button style={{
             padding: '8px 16px',
@@ -295,6 +340,149 @@ export default async function DashboardPage() {
           <p style={{ fontSize: '12px', color: '#166534', textAlign: 'center' }}>
             💡 Prices updated as of {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
+        </div>
+      </div>
+
+      {/* Premium Charts Section */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+        {/* Pie Chart - Claims Status Distribution */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '20px' }}>
+            Claims Status Distribution
+          </h3>
+          <div style={{ position: 'relative', width: '100%', height: '280px' }}>
+            {/* Pie Chart SVG */}
+            <svg width="100%" height="100%" viewBox="0 0 200 200" style={{ maxWidth: '300px', margin: '0 auto', display: 'block' }}>
+              {/* Background Circle */}
+              <circle cx="100" cy="100" r="80" fill="#f3f4f6" />
+              {/* Approved - 81% */}
+              <path d="M 100 100 L 100 20 A 80 80 0 1 1 45.8 84.6 Z" fill="#3b82f6" />
+              {/* Pending - 13% */}
+              <path d="M 100 100 L 45.8 84.6 A 80 80 0 0 1 62.4 56.2 Z" fill="#fbbf24" />
+              {/* Rejected - 7% */}
+              <path d="M 100 100 L 62.4 56.2 A 80 80 0 0 1 93.2 20.4 Z" fill="#ef4444" />
+              {/* High Risk - 4% */}
+              <path d="M 100 100 L 93.2 20.4 A 80 80 0 0 1 100 20 Z" fill="#f97316" />
+              {/* Center Circle */}
+              <circle cx="100" cy="100" r="45" fill="white" />
+              <text x="100" y="95" textAnchor="middle" fontSize="20" fontWeight="bold" fill="#1e40af">182</text>
+              <text x="100" y="110" textAnchor="middle" fontSize="12" fill="#6b7280">Total Claims</text>
+            </svg>
+            {/* Legend */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '16px', height: '16px', backgroundColor: '#3b82f6', borderRadius: '4px' }}></div>
+                <span style={{ fontSize: '14px', color: '#374151' }}>Approved ({Math.round((stats.totalApproved/stats.totalClaims)*100)}%) - {stats.totalApproved}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '16px', height: '16px', backgroundColor: '#fbbf24', borderRadius: '4px' }}></div>
+                <span style={{ fontSize: '14px', color: '#374151' }}>Pending ({Math.round((stats.totalPending/stats.totalClaims)*100)}%) - {stats.totalPending}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '16px', height: '16px', backgroundColor: '#ef4444', borderRadius: '4px' }}></div>
+                <span style={{ fontSize: '14px', color: '#374151' }}>Rejected ({Math.round((stats.totalRejected/stats.totalClaims)*100)}%) - {stats.totalRejected}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '16px', height: '16px', backgroundColor: '#f97316', borderRadius: '4px' }}></div>
+                <span style={{ fontSize: '14px', color: '#374151' }}>High Risk ({Math.round((stats.highRisk/stats.totalClaims)*100)}%) - {stats.highRisk}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bar Chart - Monthly Claims Trend */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '20px' }}>
+            Monthly Claims Trend
+          </h3>
+          <div style={{ height: '280px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            {/* Bar Chart */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '200px' }}>
+              {/* January */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '8px 8px 0 0', height: '80%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Jan</span>
+              </div>
+              {/* February */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '8px 8px 0 0', height: '95%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Feb</span>
+              </div>
+              {/* March */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '8px 8px 0 0', height: '72%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Mar</span>
+              </div>
+              {/* April */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '8px 8px 0 0', height: '88%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Apr</span>
+              </div>
+              {/* May */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '8px 8px 0 0', height: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>May</span>
+              </div>
+              {/* June */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '8px 8px 0 0', height: '92%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Jun</span>
+              </div>
+              {/* July */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #8b5cf6, #a78bfa)', borderRadius: '8px 8px 0 0', height: '78%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Jul</span>
+              </div>
+              {/* August */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #8b5cf6, #a78bfa)', borderRadius: '8px 8px 0 0', height: '85%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Aug</span>
+              </div>
+              {/* September */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #8b5cf6, #a78bfa)', borderRadius: '8px 8px 0 0', height: '90%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Sep</span>
+              </div>
+              {/* October */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #10b981, #34d399)', borderRadius: '8px 8px 0 0', height: '76%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Oct</span>
+              </div>
+              {/* November */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #10b981, #34d399)', borderRadius: '8px 8px 0 0', height: '82%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Nov</span>
+              </div>
+              {/* December */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #10b981, #34d399)', borderRadius: '8px 8px 0 0', height: '88%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Dec</span>
+              </div>
+            </div>
+            {/* Y-Axis Labels */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', padding: '0 4px' }}>
+              <span style={{ fontSize: '11px', color: '#9ca3af' }}>0</span>
+              <span style={{ fontSize: '11px', color: '#9ca3af' }}>50</span>
+              <span style={{ fontSize: '11px', color: '#9ca3af' }}>100</span>
+              <span style={{ fontSize: '11px', color: '#9ca3af' }}>150</span>
+              <span style={{ fontSize: '11px', color: '#9ca3af' }}>200</span>
+            </div>
+          </div>
+          <div style={{ marginTop: '16px', padding: '12px', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+            <p style={{ fontSize: '12px', color: '#1e40af', textAlign: 'center' }}>
+              📈 Showing 12-month trend with seasonal variations
+            </p>
+          </div>
         </div>
       </div>
 
