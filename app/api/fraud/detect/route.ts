@@ -41,9 +41,9 @@ export async function POST(request: NextRequest) {
     // Store image metadata
     await supabase.from('images').insert({
       claim_id: claimId,
-      phash,
+      phash: pHash,
       file_url: imageUrl,
-      checksum: hashBuffer(imageBuffer),
+      checksum: Buffer.from(imageBuffer).toString('base64'),
       uploaded_at: new Date().toISOString(),
     });
 
