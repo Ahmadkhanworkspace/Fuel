@@ -184,7 +184,7 @@ export default function SettingsPage() {
                       onChange={(e) => setSettings({...settings, general: {...settings.general, currency: e.target.value}})}
                       style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
                     >
-                      <option value="PKR">₨ PKR</option>
+                      <option value="PKR">Rs PKR</option>
                       <option value="USD">$ USD</option>
                       <option value="GBP">£ GBP</option>
                       <option value="EUR">€ EUR</option>
