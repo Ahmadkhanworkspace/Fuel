@@ -47,7 +47,7 @@ export default function ZonesPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newZone, setNewZone] = useState({
     name: "",
-    center: { lat: 24.8607, lng: 67.0011 }, // Default Karachi center
+    center: { lat: 29.4000, lng: 71.6833 }, // Default Bahawalpur center
     radius: 5
   });
 
@@ -85,7 +85,7 @@ export default function ZonesPage() {
 
     setZones([...zones, zone]);
     setShowAddModal(false);
-    setNewZone({ name: "", center: { lat: 24.8607, lng: 67.0011 }, radius: 5 });
+    setNewZone({ name: "", center: { lat: 29.4000, lng: 71.6833 }, radius: 5 });
     alert(`Zone "${zone.name}" created successfully!`);
   };
 
