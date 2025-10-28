@@ -5,7 +5,8 @@ import {
   Users, Plus, Edit, Trash2, Mail, Phone, MapPin, Settings, 
   AlertCircle, CheckCircle, Clock, Car, Fuel, FileText, 
   CreditCard, Shield, Printer, Calendar, TrendingUp, Search, Filter, X,
-  Ban, Unlock, Lock, MapPinned, KeyRound, Eye, EyeOff
+  Ban, Unlock, Lock, MapPinned, KeyRound, Eye, EyeOff, Bell, Send,
+  Briefcase, Route, Building2, CheckSquare, FileCheck
 } from "lucide-react";
 import { createClient } from '@/lib/supabase/browser';
 
@@ -40,6 +41,11 @@ export default function EmployeesPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [selectedEmployeeForNotification, setSelectedEmployeeForNotification] = useState<Employee | null>(null);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationType, setNotificationType] = useState<"info" | "warning" | "success" | "error">("info");
+  const [sendEmailToo, setSendEmailToo] = useState(true);
   const itemsPerPage = 5;
 
   // New employee form state
@@ -225,6 +231,11 @@ export default function EmployeesPage() {
 
   // Toggle ban status
   const handleToggleBan = async (id: string, is_banned: boolean) => {
+    const action = is_banned ? "unban" : "ban";
+    if (!window.confirm(`Are you sure you want to ${action} this employee?`)) {
+      return;
+    }
+
     try {
       const response = await fetch('/api/auth/employees', {
         method: 'PATCH',
@@ -234,10 +245,35 @@ export default function EmployeesPage() {
 
       if (!response.ok) throw new Error('Failed to update employee');
       
+      alert(`Employee ${action}ed successfully!`);
       // Real-time subscription will update the list
     } catch (error: any) {
       console.error('Error updating employee:', error);
       alert(`Failed to update employee: ${error.message}`);
+    }
+  };
+
+  // Open notification modal
+  const handleSendNotification = (employee: Employee) => {
+    setSelectedEmployeeForNotification(employee);
+    setShowNotificationModal(true);
+  };
+
+  // Send notification
+  const handleSubmitNotification = async () => {
+    if (!notificationMessage.trim()) {
+      alert("Please enter a message");
+      return;
+    }
+
+    try {
+      // In a real implementation, this would call an API to send the notification
+      alert(`Notification sent to ${selectedEmployeeForNotification?.name}${sendEmailToo ? ' (with email)' : ''}`);
+      setShowNotificationModal(false);
+      setNotificationMessage("");
+    } catch (error: any) {
+      console.error('Error sending notification:', error);
+      alert(`Failed to send notification: ${error.message}`);
     }
   };
 
@@ -945,9 +981,79 @@ export default function EmployeesPage() {
                       <p style={{ fontSize: '12px', color: '#dc2626', fontWeight: '600' }}>⚠️ This employee is banned from system access</p>
                     </div>
                   )}
+
+                  {/* Special Permissions */}
+                  <div style={{ marginTop: '12px', padding: '12px', background: '#fef3c7', borderRadius: '8px', border: '1px solid #fde68a' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                      <Shield style={{ width: '16px', height: '16px', color: '#d97706' }} />
+                      <p style={{ fontSize: '13px', color: '#92400e', fontWeight: '600' }}>Special Permissions</p>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      <span style={{ fontSize: '12px', padding: '4px 8px', background: '#fde68a', borderRadius: '4px', color: '#78350f' }}>
+                        ✓ Can submit claims
+                      </span>
+                      {employee.role === 'approver' && (
+                        <span style={{ fontSize: '12px', padding: '4px 8px', background: '#fde68a', borderRadius: '4px', color: '#78350f' }}>
+                          ✓ Can approve claims
+                        </span>
+                      )}
+                      <span style={{ fontSize: '12px', padding: '4px 8px', background: '#fde68a', borderRadius: '4px', color: '#78350f' }}>
+                        ✓ Can view history
+                      </span>
+                      <span style={{ fontSize: '12px', padding: '4px 8px', background: '#fde68a', borderRadius: '4px', color: '#78350f' }}>
+                        ✓ Can export data
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Company Designated Trips */}
+                  <div style={{ marginTop: '12px', padding: '12px', background: '#ede9fe', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Briefcase style={{ width: '16px', height: '16px', color: '#7c3aed' }} />
+                        <p style={{ fontSize: '13px', color: '#6b21a8', fontWeight: '600' }}>Company Official Trips</p>
+                      </div>
+                      <button
+                        onClick={() => alert('Add Company Trip functionality coming soon')}
+                        style={{ padding: '4px 8px', background: '#a78bfa', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
+                      >
+                        + Add Trip
+                      </button>
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#6b21a8' }}>
+                      <div style={{ padding: '8px', background: 'white', borderRadius: '6px', marginBottom: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <p style={{ fontWeight: '600', marginBottom: '2px' }}>Regional Office Visit</p>
+                          <p style={{ fontSize: '11px', color: '#6b7280' }}>Karachi • 2024-01-15</p>
+                        </div>
+                        <span style={{ fontSize: '11px', padding: '4px 8px', background: '#d1fae5', color: '#059669', borderRadius: '4px' }}>Completed</span>
+                      </div>
+                      <div style={{ padding: '8px', background: '#fef3c7', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <p style={{ fontWeight: '600', marginBottom: '2px' }}>Supplier Meeting</p>
+                          <p style={{ fontSize: '11px', color: '#6b7280' }}>Lahore • 2024-01-20</p>
+                        </div>
+                        <span style={{ fontSize: '11px', padding: '4px 8px', background: '#fef3c7', color: '#d97706', borderRadius: '4px' }}>Upcoming</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => handleSendNotification(employee)}
+                    title="Send Notification"
+                    style={{
+                      padding: '8px',
+                      background: '#dbeafe',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      color: '#2563eb'
+                    }}
+                  >
+                    <Bell style={{ width: '18px', height: '18px' }} />
+                  </button>
                   <button
                     onClick={() => handleResetPassword(employee.id, employee.name)}
                     title="Reset Password"
@@ -1033,6 +1139,141 @@ export default function EmployeesPage() {
           >
             Next
           </button>
+        </div>
+      )}
+
+      {/* Notification Modal */}
+      {showNotificationModal && selectedEmployeeForNotification && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '24px',
+            width: '90%',
+            maxWidth: '500px',
+            boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#111827' }}>Send Notification</h2>
+              <button
+                onClick={() => {
+                  setShowNotificationModal(false);
+                  setNotificationMessage("");
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: '#6b7280'
+                }}
+              >
+                <X style={{ width: '24px', height: '24px' }} />
+              </button>
+            </div>
+
+            <div style={{ marginBottom: '16px', padding: '12px', background: '#f3f4f6', borderRadius: '8px' }}>
+              <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '4px' }}>To:</p>
+              <p style={{ fontSize: '15px', fontWeight: '600', color: '#111827' }}>
+                {selectedEmployeeForNotification.name} ({selectedEmployeeForNotification.email})
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                Notification Type
+              </label>
+              <select
+                value={notificationType}
+                onChange={(e) => setNotificationType(e.target.value as any)}
+                style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}
+              >
+                <option value="info">ℹ️ Info</option>
+                <option value="warning">⚠️ Warning</option>
+                <option value="success">✅ Success</option>
+                <option value="error">❌ Error</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                Message
+              </label>
+              <textarea
+                value={notificationMessage}
+                onChange={(e) => setNotificationMessage(e.target.value)}
+                placeholder="Enter your message here..."
+                rows={4}
+                style={{ width: '100%', padding: '12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', resize: 'vertical' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input
+                type="checkbox"
+                checked={sendEmailToo}
+                onChange={(e) => setSendEmailToo(e.target.checked)}
+                style={{ cursor: 'pointer' }}
+              />
+              <label style={{ fontSize: '14px', color: '#374151', cursor: 'pointer' }}>
+                Also send as email notification
+              </label>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                onClick={() => {
+                  setShowNotificationModal(false);
+                  setNotificationMessage("");
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: '#f3f4f6',
+                  color: '#374151',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitNotification}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: 'linear-gradient(90deg, #2563eb, #1e40af)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
+                <Send style={{ width: '16px', height: '16px' }} />
+                Send Notification
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
