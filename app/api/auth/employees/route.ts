@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Don't return password hashes
-    const safeEmployees = employees.map(emp => ({
+    const safeEmployees = employees.map((emp: any) => ({
       ...emp,
       password_hash: undefined,
       password_reset_token: undefined
