@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MapPin, Plus, Edit, Trash2, CheckCircle } from "lucide-react";
 
 export default function ZonesPage() {
-  const zones = [
+  const [zones, setZones] = useState([
     {
       id: "1",
       name: "Mumbai Central Zone",
@@ -32,7 +32,25 @@ export default function ZonesPage() {
       vehicles: 5,
       violations: 0
     },
-  ];
+  ]);
+
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  const handleDeleteZone = (id: string) => {
+    const zoneName = zones.find(z => z.id === id)?.name;
+    if (window.confirm(`Are you sure you want to delete zone "${zoneName}"? This action cannot be undone.`)) {
+      setZones(zones.filter(z => z.id !== id));
+      alert("Zone deleted successfully!");
+    }
+  };
+
+  const handleToggleStatus = (id: string) => {
+    setZones(zones.map(zone => 
+      zone.id === id 
+        ? { ...zone, status: zone.status === "active" ? "inactive" : "active" }
+        : zone
+    ));
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -46,20 +64,22 @@ export default function ZonesPage() {
             Manage geofencing zones for fuel claims
           </p>
         </div>
-        <button style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '10px 20px',
-          background: 'linear-gradient(90deg, #2563eb, #1e40af)',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: '500',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}>
+        <button 
+          onClick={() => alert("Create zone functionality coming soon!")}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '10px 20px',
+            background: 'linear-gradient(90deg, #2563eb, #1e40af)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '500',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+          }}>
           <Plus style={{ width: '18px', height: '18px' }} />
           Create Zone
         </button>
@@ -94,22 +114,28 @@ export default function ZonesPage() {
                 </p>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
-                <button style={{
-                  padding: '6px',
-                  border: 'none',
-                  background: 'transparent',
-                  cursor: 'pointer',
-                  borderRadius: '6px'
-                }}>
+                <button 
+                  onClick={() => alert("Edit functionality coming soon!")}
+                  title="Edit zone"
+                  style={{
+                    padding: '6px',
+                    border: 'none',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    borderRadius: '6px'
+                  }}>
                   <Edit style={{ width: '18px', height: '18px', color: '#6b7280' }} />
                 </button>
-                <button style={{
-                  padding: '6px',
-                  border: 'none',
-                  background: 'transparent',
-                  cursor: 'pointer',
-                  borderRadius: '6px'
-                }}>
+                <button 
+                  onClick={() => handleDeleteZone(zone.id)}
+                  title="Delete zone"
+                  style={{
+                    padding: '6px',
+                    border: 'none',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    borderRadius: '6px'
+                  }}>
                   <Trash2 style={{ width: '18px', height: '18px', color: '#dc2626' }} />
                 </button>
               </div>

@@ -49,6 +49,15 @@ export default function SettingsPage() {
       enableBackup: true,
       backupFrequency: "daily",
       enableAutoMaintenance: true,
+    },
+    advanced: {
+      enableAPI: true,
+      apiRateLimit: 100,
+      enableWebhooks: true,
+      enableCaching: true,
+      cacheTTL: 3600,
+      enableAnalytics: true,
+      enableRealTimeSync: true,
     }
   });
 
@@ -64,6 +73,7 @@ export default function SettingsPage() {
     { id: "zones", label: "Zones", icon: MapPin },
     { id: "notifications", label: "Notifications", icon: Bell },
     { id: "system", label: "System", icon: Database },
+    { id: "advanced", label: "Advanced", icon: Settings },
   ];
 
   return (
@@ -559,6 +569,95 @@ export default function SettingsPage() {
                       style={{ width: '18px', height: '18px' }}
                     />
                     <span style={{ fontSize: '14px', color: '#374151' }}>Enable Auto Maintenance</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "advanced" && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>Advanced Settings</h2>
+              <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '24px' }}>Configure advanced system settings and APIs</p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ marginTop: '8px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.advanced.enableAPI}
+                      onChange={(e) => setSettings({...settings, advanced: {...settings.advanced, enableAPI: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Enable Public API Access</span>
+                  </label>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>API Rate Limit (requests/hour)</label>
+                  <input
+                    type="number"
+                    value={settings.advanced.apiRateLimit}
+                    onChange={(e) => setSettings({...settings, advanced: {...settings.advanced, apiRateLimit: parseInt(e.target.value)}})}
+                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                </div>
+
+                <div style={{ marginTop: '8px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.advanced.enableWebhooks}
+                      onChange={(e) => setSettings({...settings, advanced: {...settings.advanced, enableWebhooks: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Enable Webhooks</span>
+                  </label>
+                </div>
+
+                <div style={{ marginTop: '8px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.advanced.enableCaching}
+                      onChange={(e) => setSettings({...settings, advanced: {...settings.advanced, enableCaching: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Enable Data Caching</span>
+                  </label>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Cache TTL (seconds)</label>
+                  <input
+                    type="number"
+                    value={settings.advanced.cacheTTL}
+                    onChange={(e) => setSettings({...settings, advanced: {...settings.advanced, cacheTTL: parseInt(e.target.value)}})}
+                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                </div>
+
+                <div style={{ marginTop: '8px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.advanced.enableAnalytics}
+                      onChange={(e) => setSettings({...settings, advanced: {...settings.advanced, enableAnalytics: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Enable Analytics Tracking</span>
+                  </label>
+                </div>
+
+                <div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.advanced.enableRealTimeSync}
+                      onChange={(e) => setSettings({...settings, advanced: {...settings.advanced, enableRealTimeSync: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <span style={{ fontSize: '14px', color: '#374151' }}>Enable Real-time Sync</span>
                   </label>
                 </div>
               </div>
