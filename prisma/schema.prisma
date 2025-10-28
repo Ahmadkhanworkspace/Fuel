@@ -15,13 +15,18 @@ model Employee {
   employee_code         String   @unique
   name                  String
   email                 String   @unique
+  username              String   @unique
+  password_hash         String
   phone                 String?
   role                  Role     @default(employee)
+  department            String?  @default("Operations")
   zone_id               String?
   zone                  Zone?    @relation("EmployeeZone", fields: [zone_id], references: [id])
   allowed_quota_liters   Float    @default(100)
   is_banned             Boolean  @default(false)
   allowed_zones         String[]
+  password_reset_token  String?  @unique
+  password_reset_expires DateTime?
   created_at            DateTime @default(now())
   updated_at            DateTime @updatedAt
 
