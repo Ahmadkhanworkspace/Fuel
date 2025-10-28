@@ -245,8 +245,12 @@ export default function EmployeesPage() {
   };
 
   const handleDeleteEmployee = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this employee?")) {
+    const employee = employees.find(emp => emp.id === id);
+    if (!employee) return;
+    
+    if (window.confirm(`Are you sure you want to delete "${employee.name}"? This action cannot be undone.`)) {
       setEmployees(employees.filter(emp => emp.id !== id));
+      alert(`Employee "${employee.name}" has been deleted successfully!`);
     }
   };
 
