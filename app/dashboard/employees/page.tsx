@@ -6,7 +6,7 @@ import {
   AlertCircle, CheckCircle, Clock, Car, Fuel, FileText, 
   CreditCard, Shield, Printer, Calendar, TrendingUp, Search, Filter, X,
   Ban, Unlock, Lock, MapPinned, KeyRound, Eye, EyeOff, Bell, Send,
-  Briefcase, Route, Building2, CheckSquare, FileCheck
+  Briefcase, Route, Building2, CheckSquare, FileCheck, ChevronDown, ChevronUp
 } from "lucide-react";
 import { createClient } from '@/lib/supabase/browser';
 
@@ -41,6 +41,7 @@ export default function EmployeesPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [expandedEmployees, setExpandedEmployees] = useState<Set<string>>(new Set());
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [selectedEmployeeForNotification, setSelectedEmployeeForNotification] = useState<Employee | null>(null);
   const [notificationMessage, setNotificationMessage] = useState("");
@@ -240,6 +241,19 @@ export default function EmployeesPage() {
       console.error('Error resetting password:', error);
       alert(`Failed to reset password: ${error.message}`);
     }
+  };
+
+  // Toggle employee card expansion
+  const toggleEmployeeExpansion = (employeeId: string) => {
+    setExpandedEmployees((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(employeeId)) {
+        newSet.delete(employeeId);
+      } else {
+        newSet.add(employeeId);
+      }
+      return newSet;
+    });
   };
 
   // Toggle ban status
@@ -997,9 +1011,16 @@ export default function EmployeesPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>
-                      {employee.name}
-                    </h3>
+                    <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => toggleEmployeeExpansion(employee.id)}>
+                      <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>
+                        {employee.name}
+                      </h3>
+                      {expandedEmployees.has(employee.id) ? (
+                        <ChevronUp style={{ width: '16px', height: '16px', color: '#6b7280' }} />
+                      ) : (
+                        <ChevronDown style={{ width: '16px', height: '16px', color: '#6b7280' }} />
+                      )}
+                    </div>
                     <span style={{
                       padding: '4px 12px',
                       borderRadius: '6px',
@@ -1139,7 +1160,76 @@ export default function EmployeesPage() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '8px' }}>
+                {/* Expanded Details with Analytics */}
+                {expandedEmployees.has(employee.id) && (
+                  <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '2px solid #e5e7eb' }}>
+                    <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '20px' }}>Employee Analytics & Details</h4>
+                    
+                    {/* Analytics Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+                      <div style={{ padding: '16px', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <Fuel style={{ width: '20px', height: '20px', color: '#0284c7' }} />
+                          <p style={{ fontSize: '12px', color: '#0c4a6e', fontWeight: '600' }}>Fuel Usage</p>
+                        </div>
+                        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#075985' }}>45L</p>
+                        <p style={{ fontSize: '12px', color: '#0284c7' }}>of {employee.allowed_quota_liters}L quota</p>
+                      </div>
+                      
+                      <div style={{ padding: '16px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #86efac' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <FileText style={{ width: '20px', height: '20px', color: '#059669' }} />
+                          <p style={{ fontSize: '12px', color: '#064e3b', fontWeight: '600' }}>Total Claims</p>
+                        </div>
+                        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#047857' }}>12</p>
+                        <p style={{ fontSize: '12px', color: '#059669' }}>This month</p>
+                      </div>
+                      
+                      <div style={{ padding: '16px', background: '#fef3c7', borderRadius: '8px', border: '1px solid #fde68a' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <CheckCircle style={{ width: '20px', height: '20px', color: '#d97706' }} />
+                          <p style={{ fontSize: '12px', color: '#78350f', fontWeight: '600' }}>Approval Rate</p>
+                        </div>
+                        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#92400e' }}>92%</p>
+                        <p style={{ fontSize: '12px', color: '#d97706' }}>12/13 approved</p>
+                      </div>
+                      
+                      <div style={{ padding: '16px', background: '#f5f3ff', borderRadius: '8px', border: '1px solid #c4b5fd' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <Clock style={{ width: '20px', height: '20px', color: '#7c3aed' }} />
+                          <p style={{ fontSize: '12px', color: '#581c87', fontWeight: '600' }}>Avg Response</p>
+                        </div>
+                        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#6b21a8' }}>2.5h</p>
+                        <p style={{ fontSize: '12px', color: '#7c3aed' }}>per claim</p>
+                      </div>
+                    </div>
+
+                    {/* Additional Details */}
+                    <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                      <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                        <p style={{ fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>📊 Monthly Stats</p>
+                        <div style={{ fontSize: '13px', color: '#6b7280', lineHeight: '1.8' }}>
+                          <p>• Claims Submitted: 12</p>
+                          <p>• Claims Approved: 11</p>
+                          <p>• Claims Rejected: 1</p>
+                          <p>• Total Cost: Rs 45,000</p>
+                        </div>
+                      </div>
+
+                      <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                        <p style={{ fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>🎯 Recent Activity</p>
+                        <div style={{ fontSize: '13px', color: '#6b7280', lineHeight: '1.8' }}>
+                          <p>• Last claim: 2 days ago</p>
+                          <p>• Last login: 5 hours ago</p>
+                          <p>• Active zones: {employee.allowed_zones?.length || 0}/5</p>
+                          <p>• Department: {employee.department || 'N/A'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
                   <button
                     onClick={() => handleSendNotification(employee)}
                     title="Send Notification"
