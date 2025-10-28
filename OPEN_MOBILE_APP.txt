@@ -1,0 +1,25 @@
+✅ MOBILE APP IS STARTING!
+
+========================================
+📱 HOW TO OPEN THE APP
+========================================
+
+The server is starting. Wait 30 seconds, then:
+
+OPTION 1 - Direct URL:
+Go to: http://localhost:8082
+
+OPTION 2 - Manifest shows, add "index.bundle":
+Go to: http://localhost:8082/index.bundle?platform=web
+
+OPTION 3 - Try these URLs:
+- http://localhost:8082/index.html
+- http://127.0.0.1:8082
+- http://127.0.0.1:8082/index.bundle?platform=web
+
+========================================
+
+The app should load in your browser!
+
+If you see JSON, try adding /index.bundle to the URL.
+

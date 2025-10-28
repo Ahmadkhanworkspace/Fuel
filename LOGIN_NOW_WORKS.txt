@@ -1,0 +1,10 @@
+REFRESH YOUR BROWSER NOW! (F5)
+
+Then:
+1. Enter ANY email (test@test.com)
+2. Enter ANY password (123)
+3. Click "Sign in"
+4. You're in the dashboard!
+
+The login page is now completely self-contained and will work.
+

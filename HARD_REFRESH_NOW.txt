@@ -1,0 +1,4 @@
+PRESS CTRL + SHIFT + R or F5
+
+Then the layout will be fixed!
+

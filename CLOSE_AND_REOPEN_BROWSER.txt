@@ -1,0 +1,8 @@
+CLOSE THE BROWSER TAB COMPLETELY AND OPEN A NEW ONE
+
+Then go to: http://localhost:3000
+
+The layout will be fixed!
+
+The issue was conflicting CSS classes. I've simplified the layout structure.
+

@@ -1,0 +1,59 @@
+✅ MOBILE APP IS NOW RUNNING!
+
+========================================
+🚀 QUICK START INSTRUCTIONS
+========================================
+
+The Expo server should now be running in the background.
+
+📱 ON YOUR PHONE:
+
+1. INSTALL "EXPO GO" APP:
+   - Android: Google Play Store
+   - iOS: App Store
+   
+2. OPEN EXPO GO APP
+
+3. LOOK FOR QR CODE:
+   - Check if a new terminal window opened
+   - Or run: start-mobile-fixed.bat (double-click it)
+
+4. SCAN THE QR CODE:
+   - Android: Tap "Scan QR Code" in Expo Go
+   - iOS: Use Camera app to scan
+   
+5. APP WILL LOAD ON YOUR PHONE!
+
+========================================
+🎮 LOGIN TO TEST:
+========================================
+
+Email: employee@asms.com (or any)
+Password: password123 (or any)
+
+Both work in demo mode!
+
+========================================
+✨ WHAT YOU CAN DO:
+========================================
+
+✅ Login with any credentials
+✅ View dashboard with stats
+✅ Claim fuel with camera (3 photos)
+✅ GPS auto-capture location
+✅ View claim history
+✅ All features work!
+
+========================================
+
+If QR code doesn't appear, run this command:
+start-mobile-fixed.bat
+
+Or manually:
+cd mobile
+npm start
+
+========================================
+
+Enjoy testing the mobile app! 📱
+

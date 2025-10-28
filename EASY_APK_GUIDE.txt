@@ -1,0 +1,40 @@
+✅ EASIEST WAY TO GET APK!
+
+========================================
+🚀 OPTION 1: Direct Install (No APK file)
+========================================
+
+1. Connect phone via USB
+2. Enable USB debugging
+3. Run this command:
+
+cd mobile
+npx expo run:android
+
+App installs directly on phone!
+No APK file needed!
+
+========================================
+🌐 OPTION 2: Cloud Build (Get APK file)
+========================================
+
+1. cd mobile
+2. eas login (create free account)
+3. eas build --platform android --profile preview
+
+Wait 15 minutes, download APK!
+
+========================================
+📱 OPTION 3: Web PWA (Instant!)
+========================================
+
+1. Open http://localhost:8081
+2. Chrome → Install App
+3. Works like native app!
+
+========================================
+
+I recommend Option 1 - it's the fastest!
+
+Connect your phone and run the command! 📱
+

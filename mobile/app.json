@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "ASMS Vehicle Management",
+    "slug": "asms-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#2563eb",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.asms.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#2563eb"
+      },
+      "package": "com.asms.mobile"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

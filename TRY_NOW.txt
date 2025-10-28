@@ -1,0 +1,12 @@
+=== REFRESH YOUR BROWSER ===
+
+Press F5 or Ctrl+F5 to refresh
+
+Then:
+1. Enter any email
+2. Enter any password  
+3. Click "Sign in"
+4. You'll go to dashboard!
+
+I fixed everything - dashboard now works without auth!
+

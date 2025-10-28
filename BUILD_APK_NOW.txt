@@ -1,0 +1,34 @@
+🎯 TO BUILD APK - Choose One:
+
+========================================
+OPTION 1: Cloud Build (Easiest)
+========================================
+cd mobile
+eas login
+eas build --platform android --profile preview
+
+(Wait 10 minutes, download APK link)
+
+========================================
+OPTION 2: Web PWA (Instant!)
+========================================
+1. Mobile app is running at http://localhost:8081
+2. In Chrome, click menu → "Install App"
+3. Works like native app!
+
+(This is the FASTEST option!)
+
+========================================
+OPTION 3: Local Build (If Android Studio installed)
+========================================
+cd mobile
+npx expo run:android
+
+(Installs on connected device)
+
+========================================
+
+I recommend OPTION 2 (Web PWA) - it works NOW! 🚀
+
+Just open http://localhost:8081 and install as app!
+

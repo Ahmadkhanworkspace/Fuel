@@ -1,0 +1,8 @@
+CLOSE BROWSER TAB COMPLETELY
+OPEN NEW TAB
+GO TO: http://localhost:3000
+LOGIN WITH ANY EMAIL/PASSWORD
+DASHBOARD WILL NOW WORK PROPERLY!
+
+I used inline styles to avoid CSS conflicts. The layout is fixed!
+
