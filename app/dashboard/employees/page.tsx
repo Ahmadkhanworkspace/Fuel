@@ -46,7 +46,20 @@ export default function EmployeesPage() {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationType, setNotificationType] = useState<"info" | "warning" | "success" | "error">("info");
   const [sendEmailToo, setSendEmailToo] = useState(true);
+  const [showTripModal, setShowTripModal] = useState(false);
+  const [selectedEmployeeForTrip, setSelectedEmployeeForTrip] = useState<Employee | null>(null);
+  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [isLoadingVehicles, setIsLoadingVehicles] = useState(false);
   const itemsPerPage = 5;
+
+  // Trip form state
+  const [tripForm, setTripForm] = useState({
+    vehicle_id: "",
+    trip_type: "Head Office",
+    destination: "",
+    start_location: "",
+    purpose: "",
+  });
 
   // New employee form state
   const [newEmployee, setNewEmployee] = useState({
@@ -274,6 +287,93 @@ export default function EmployeesPage() {
     } catch (error: any) {
       console.error('Error sending notification:', error);
       alert(`Failed to send notification: ${error.message}`);
+    }
+  };
+
+  // Fetch vehicles for trip creation
+  const fetchVehicles = async () => {
+    try {
+      setIsLoadingVehicles(true);
+      const response = await fetch('/api/vehicles');
+      if (!response.ok) throw new Error('Failed to fetch vehicles');
+      const data = await response.json();
+      setVehicles(data);
+    } catch (error) {
+      console.error('Error fetching vehicles:', error);
+      alert('Failed to load vehicles');
+    } finally {
+      setIsLoadingVehicles(false);
+    }
+  };
+
+  // Open trip modal
+  const handleCreateTrip = (employee: Employee) => {
+    setSelectedEmployeeForTrip(employee);
+    setShowTripModal(true);
+    fetchVehicles();
+  };
+
+  // Create trip
+  const handleSubmitTrip = async () => {
+    if (!tripForm.vehicle_id || !tripForm.destination) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      // Get current location
+      let startLat, startLng;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          startLat = position.coords.latitude;
+          startLng = position.coords.longitude;
+          
+          createTripWithLocation(startLat, startLng);
+        }, () => {
+          // If geolocation fails, create trip without location
+          createTripWithLocation(null, null);
+        });
+      } else {
+        createTripWithLocation(null, null);
+      }
+    } catch (error: any) {
+      console.error('Error creating trip:', error);
+      alert(`Failed to create trip: ${error.message}`);
+    }
+  };
+
+  const createTripWithLocation = async (lat: number | null, lng: number | null) => {
+    try {
+      const response = await fetch('/api/trips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employee_id: selectedEmployeeForTrip?.id,
+          vehicle_id: tripForm.vehicle_id,
+          trip_type: tripForm.trip_type,
+          destination: tripForm.destination,
+          start_location: tripForm.start_location || 'Current Location',
+          start_lat: lat,
+          start_lng: lng,
+          purpose: tripForm.purpose,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to create trip');
+
+      const data = await response.json();
+      alert(`Official trip created successfully!\nTrip ID: ${data.id}`);
+      setShowTripModal(false);
+      setTripForm({
+        vehicle_id: "",
+        trip_type: "Head Office",
+        destination: "",
+        start_location: "",
+        purpose: "",
+      });
+    } catch (error: any) {
+      console.error('Error creating trip:', error);
+      alert(`Failed to create trip: ${error.message}`);
     }
   };
 
@@ -1014,7 +1114,7 @@ export default function EmployeesPage() {
                         <p style={{ fontSize: '13px', color: '#6b21a8', fontWeight: '600' }}>Company Official Trips</p>
                       </div>
                       <button
-                        onClick={() => alert('Add Company Trip functionality coming soon')}
+                        onClick={() => handleCreateTrip(employee)}
                         style={{ padding: '4px 8px', background: '#a78bfa', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
                       >
                         + Add Trip
@@ -1271,6 +1371,226 @@ export default function EmployeesPage() {
               >
                 <Send style={{ width: '16px', height: '16px' }} />
                 Send Notification
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Trip Creation Modal */}
+      {showTripModal && selectedEmployeeForTrip && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+          overflowY: 'auto',
+          padding: '20px'
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '24px',
+            width: '90%',
+            maxWidth: '600px',
+            boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)',
+            maxHeight: '90vh',
+            overflowY: 'auto'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div>
+                <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#111827' }}>Create Official Trip</h2>
+                <p style={{ fontSize: '13px', color: '#6b7280', marginTop: '4px' }}>
+                  For: {selectedEmployeeForTrip.name} ({selectedEmployeeForTrip.email})
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowTripModal(false);
+                  setTripForm({
+                    vehicle_id: "",
+                    trip_type: "Head Office",
+                    destination: "",
+                    start_location: "",
+                    purpose: "",
+                  });
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: '#6b7280'
+                }}
+              >
+                <X style={{ width: '24px', height: '24px' }} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  Vehicle <span style={{ color: '#dc2626' }}>*</span>
+                </label>
+                <select
+                  value={tripForm.vehicle_id}
+                  onChange={(e) => setTripForm({...tripForm, vehicle_id: e.target.value})}
+                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}
+                >
+                  <option value="">Select vehicle...</option>
+                  {isLoadingVehicles ? (
+                    <option>Loading vehicles...</option>
+                  ) : (
+                    vehicles.map((vehicle) => (
+                      <option key={vehicle.id} value={vehicle.id}>
+                        {vehicle.reg_no} {vehicle.model ? `- ${vehicle.model}` : ''}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  Trip Type <span style={{ color: '#dc2626' }}>*</span>
+                </label>
+                <select
+                  value={tripForm.trip_type}
+                  onChange={(e) => setTripForm({...tripForm, trip_type: e.target.value})}
+                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}
+                >
+                  <option value="Head Office">🏢 Head Office Visit</option>
+                  <option value="Official Visit">🏛️ Official Visit</option>
+                  <option value="Field Work">🌾 Field Work</option>
+                  <option value="Supplier Meeting">🤝 Supplier Meeting</option>
+                  <option value="Client Visit">👥 Client Visit</option>
+                  <option value="Training">📚 Training</option>
+                  <option value="Other">📍 Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  Destination <span style={{ color: '#dc2626' }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  value={tripForm.destination}
+                  onChange={(e) => setTripForm({...tripForm, destination: e.target.value})}
+                  placeholder="e.g., Karachi Head Office"
+                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  Start Location
+                </label>
+                <input
+                  type="text"
+                  value={tripForm.start_location}
+                  onChange={(e) => setTripForm({...tripForm, start_location: e.target.value})}
+                  placeholder="Auto-detected from GPS"
+                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  Trip Purpose
+                </label>
+                <textarea
+                  value={tripForm.purpose}
+                  onChange={(e) => setTripForm({...tripForm, purpose: e.target.value})}
+                  placeholder="Brief description of the trip purpose..."
+                  rows={3}
+                  style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', resize: 'vertical' }}
+                />
+              </div>
+
+              <div style={{ 
+                padding: '12px', 
+                background: '#ede9fe', 
+                borderRadius: '8px',
+                border: '1px solid #ddd6fe'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <Route style={{ width: '16px', height: '16px', color: '#7c3aed' }} />
+                  <p style={{ fontSize: '13px', fontWeight: '600', color: '#6b21a8' }}>Location Tracking Enabled</p>
+                </div>
+                <p style={{ fontSize: '12px', color: '#6b21a8' }}>
+                  Your location will be tracked throughout the trip. Make sure to enable GPS tracking for toll tax receipts and fuel purchases.
+                </p>
+              </div>
+
+              <div style={{ 
+                padding: '12px', 
+                background: '#fef3c7', 
+                borderRadius: '8px',
+                border: '1px solid #fde68a'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <FileCheck style={{ width: '16px', height: '16px', color: '#d97706' }} />
+                  <p style={{ fontSize: '13px', fontWeight: '600', color: '#92400e' }}>Receipt & Expense Tracking</p>
+                </div>
+                <p style={{ fontSize: '12px', color: '#78350f' }}>
+                  After creating the trip, you can add toll tax receipts, fuel receipts, and other expenses with timestamps and location logs.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+              <button
+                onClick={() => {
+                  setShowTripModal(false);
+                  setTripForm({
+                    vehicle_id: "",
+                    trip_type: "Head Office",
+                    destination: "",
+                    start_location: "",
+                    purpose: "",
+                  });
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: '#f3f4f6',
+                  color: '#374151',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitTrip}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: 'linear-gradient(90deg, #2563eb, #1e40af)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
+                <Route style={{ width: '16px', height: '16px' }} />
+                Create Trip
               </button>
             </div>
           </div>

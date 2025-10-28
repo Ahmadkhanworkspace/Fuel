@@ -29,6 +29,7 @@ model Employee {
   claims                 Claim[]
   zone                   Zone?     @relation("EmployeeZone", fields: [zone_id], references: [id])
   vehicles               Vehicle[]
+  trips                  OfficialTrip[]
 
   @@index([zone_id])
   @@index([role])
@@ -47,6 +48,7 @@ model Vehicle {
   updated_at           DateTime  @updatedAt
   claims               Claim[]
   assigned_employee    Employee? @relation(fields: [assigned_employee_id], references: [id])
+  trips                OfficialTrip[]
 
   @@index([assigned_employee_id])
   @@map("vehicles")
@@ -138,6 +140,92 @@ model LocationLog {
   @@map("location_logs")
 }
 
+model OfficialTrip {
+  id                String           @id @default(uuid())
+  employee_id       String
+  vehicle_id        String
+  trip_type         String            // "Head Office", "Official Visit", "Field Work", etc.
+  destination       String
+  start_location    String
+  start_lat         Float?
+  start_lng         Float?
+  end_lat           Float?
+  end_lng           Float?
+  purpose           String?
+  approved_by_id    String?
+  is_approved       Boolean           @default(false)
+  approved_at       DateTime?
+  trip_status       TripStatus        @default(active)
+  total_distance_km Float?
+  total_cost        Decimal?          @default(0)
+  start_time        DateTime          @default(now())
+  end_time          DateTime?
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @updatedAt
+  employee          Employee          @relation(fields: [employee_id], references: [id])
+  vehicle           Vehicle           @relation(fields: [vehicle_id], references: [id])
+  expenses          TripExpense[]
+  location_logs     TripLocationLog[]
+  receipts          TripReceipt[]
+
+  @@index([employee_id])
+  @@index([vehicle_id])
+  @@index([trip_status])
+  @@index([created_at])
+  @@map("official_trips")
+}
+
+model TripExpense {
+  id                String       @id @default(uuid())
+  trip_id           String
+  expense_type      ExpenseType
+  amount            Decimal
+  description       String?
+  location          String?
+  latitude          Float?
+  longitude         Float?
+  timestamp         DateTime     @default(now())
+  photo_url         String?
+  receipt_url       String?
+  created_at        DateTime     @default(now())
+  trip              OfficialTrip @relation(fields: [trip_id], references: [id], onDelete: Cascade)
+
+  @@index([trip_id])
+  @@map("trip_expenses")
+}
+
+model TripReceipt {
+  id          String       @id @default(uuid())
+  trip_id     String
+  receipt_type ReceiptType
+  file_url    String
+  amount      Decimal
+  location    String?
+  latitude    Float?
+  longitude   Float?
+  timestamp   DateTime     @default(now())
+  notes       String?
+  created_at  DateTime     @default(now())
+  trip        OfficialTrip @relation(fields: [trip_id], references: [id], onDelete: Cascade)
+
+  @@index([trip_id])
+  @@map("trip_receipts")
+}
+
+model TripLocationLog {
+  id          String       @id @default(uuid())
+  trip_id     String
+  latitude    Float
+  longitude   Float
+  address     String?
+  timestamp   DateTime     @default(now())
+  trip        OfficialTrip @relation(fields: [trip_id], references: [id], onDelete: Cascade)
+
+  @@index([trip_id])
+  @@index([timestamp])
+  @@map("trip_location_logs")
+}
+
 enum Role {
   employee
   approver
@@ -155,5 +243,29 @@ enum ImageType {
   receipt
   odometer
   pump
+  other
+}
+
+enum TripStatus {
+  active
+  completed
+  cancelled
+  pending
+}
+
+enum ExpenseType {
+  fuel
+  toll
+  parking
+  maintenance
+  other
+}
+
+enum ReceiptType {
+  fuel
+  toll_tax
+  parking
+  food
+  accommodation
   other
 }
