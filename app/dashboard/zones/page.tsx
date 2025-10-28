@@ -1,98 +1,160 @@
 "use client";
 
-import { useState } from "react";
-import { MapPin, Plus, Edit, Trash2, CheckCircle, Save, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MapPin, Plus, Edit, Trash2, CheckCircle, Save, X, AlertCircle } from "lucide-react";
+import { createClient } from '@/lib/supabase/browser';
 
 interface Zone {
   id: string;
   name: string;
-  center: { lat: number; lng: number };
-  radius: number;
-  status: "active" | "inactive";
-  vehicles: number;
-  violations: number;
+  center_lat: number | null;
+  center_lng: number | null;
+  radius_km: number | null;
+  active: boolean;
+  vehicle_count: number;
+  violation_count: number;
 }
 
 export default function ZonesPage() {
-  const [zones, setZones] = useState<Zone[]>([
-    {
-      id: "1",
-      name: "Mumbai Central Zone",
-      center: { lat: 19.0760, lng: 72.8777 },
-      radius: 5,
-      status: "active",
-      vehicles: 12,
-      violations: 2
-    },
-    {
-      id: "2",
-      name: "Pune Central Zone",
-      center: { lat: 18.5204, lng: 73.8567 },
-      radius: 8,
-      status: "active",
-      vehicles: 8,
-      violations: 1
-    },
-    {
-      id: "3",
-      name: "Thane Extended Zone",
-      center: { lat: 19.2183, lng: 72.9781 },
-      radius: 10,
-      status: "inactive",
-      vehicles: 5,
-      violations: 0
-    },
-  ]);
-
+  const [zones, setZones] = useState<Zone[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newZone, setNewZone] = useState({
     name: "",
-    center: { lat: 29.4000, lng: 71.6833 }, // Default Bahawalpur center
-    radius: 5
+    center_lat: 29.4000,
+    center_lng: 71.6833,
+    radius_km: 5
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDeleteZone = (id: string) => {
-    const zoneName = zones.find(z => z.id === id)?.name;
-    if (window.confirm(`Are you sure you want to delete zone "${zoneName}"? This action cannot be undone.`)) {
-      setZones(zones.filter(z => z.id !== id));
-      alert("Zone deleted successfully!");
+  // Load zones from database
+  const fetchZones = async () => {
+    try {
+      const response = await fetch('/api/zones');
+      if (!response.ok) throw new Error('Failed to fetch zones');
+      const data = await response.json();
+      setZones(data);
+      setLoading(false);
+    } catch (err: any) {
+      console.error('Error fetching zones:', err);
+      setError(err.message);
+      setLoading(false);
     }
   };
 
-  const handleToggleStatus = (id: string) => {
-    setZones(zones.map(zone => 
-      zone.id === id 
-        ? { ...zone, status: zone.status === "active" ? "inactive" : "active" }
-        : zone
-    ));
+  // Setup real-time sync with Supabase
+  useEffect(() => {
+    fetchZones();
+
+    // Setup Supabase real-time subscription
+    const supabase = createClient();
+    
+    const channel = supabase
+      .channel('zones-changes')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'zones' },
+        (payload) => {
+          console.log('Zone change detected:', payload);
+          fetchZones(); // Refresh zones when database changes
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const handleDeleteZone = async (id: string) => {
+    const zoneName = zones.find(z => z.id === id)?.name;
+    if (window.confirm(`Are you sure you want to delete zone "${zoneName}"? This action cannot be undone.`)) {
+      try {
+        setIsSubmitting(true);
+        const response = await fetch(`/api/zones?id=${id}`, {
+          method: 'DELETE'
+        });
+
+        if (!response.ok) throw new Error('Failed to delete zone');
+        
+        alert("Zone deleted successfully!");
+        // Don't need to update state manually - real-time subscription will handle it
+      } catch (err: any) {
+        console.error('Error deleting zone:', err);
+        alert(`Failed to delete zone: ${err.message}`);
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
   };
 
-  const handleCreateZone = () => {
-    if (!newZone.name || newZone.radius <= 0) {
+  const handleCreateZone = async () => {
+    if (!newZone.name || !newZone.radius_km || newZone.radius_km <= 0) {
       alert("Please fill in all fields correctly!");
       return;
     }
 
-    const zone: Zone = {
-      id: Date.now().toString(),
-      name: newZone.name,
-      center: newZone.center,
-      radius: newZone.radius,
-      status: "active",
-      vehicles: 0,
-      violations: 0
-    };
+    try {
+      setIsSubmitting(true);
+      const response = await fetch('/api/zones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newZone.name,
+          center_lat: newZone.center_lat,
+          center_lng: newZone.center_lng,
+          radius_km: newZone.radius_km,
+          active: true
+        })
+      });
 
-    setZones([...zones, zone]);
-    setShowAddModal(false);
-    setNewZone({ name: "", center: { lat: 29.4000, lng: 71.6833 }, radius: 5 });
-    alert(`Zone "${zone.name}" created successfully!`);
+      if (!response.ok) throw new Error('Failed to create zone');
+      
+      alert(`Zone "${newZone.name}" created successfully!`);
+      setShowAddModal(false);
+      setNewZone({ name: "", center_lat: 29.4000, center_lng: 71.6833, radius_km: 5 });
+      // Real-time subscription will update the list automatically
+    } catch (err: any) {
+      console.error('Error creating zone:', err);
+      alert(`Failed to create zone: ${err.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const openGoogleMaps = (center: { lat: number; lng: number }) => {
-    const url = `https://www.google.com/maps?q=${center.lat},${center.lng}`;
+  const openGoogleMaps = (lat: number | null, lng: number | null) => {
+    if (!lat || !lng) return;
+    const url = `https://www.google.com/maps?q=${lat},${lng}`;
     window.open(url, '_blank');
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+        <div style={{ fontSize: '18px', color: '#6b7280' }}>Loading zones...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ 
+        padding: '24px', 
+        background: '#fef2f2', 
+        border: '1px solid #fecaca', 
+        borderRadius: '12px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px'
+      }}>
+        <AlertCircle style={{ width: '24px', height: '24px', color: '#dc2626' }} />
+        <div>
+          <div style={{ fontSize: '16px', fontWeight: '600', color: '#dc2626' }}>Error</div>
+          <div style={{ fontSize: '14px', color: '#991b1b' }}>{error}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -103,11 +165,12 @@ export default function ZonesPage() {
             Zones
           </h1>
           <p style={{ color: '#4b5563', fontSize: '14px' }}>
-            Manage geofencing zones for fuel claims with Google Maps integration
+            Manage geofencing zones with real-time sync
           </p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
+          disabled={isSubmitting}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -117,10 +180,11 @@ export default function ZonesPage() {
             color: 'white',
             border: 'none',
             borderRadius: '8px',
-            cursor: 'pointer',
+            cursor: isSubmitting ? 'not-allowed' : 'pointer',
             fontSize: '14px',
             fontWeight: '500',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            opacity: isSubmitting ? 0.6 : 1
           }}>
           <Plus style={{ width: '18px', height: '18px' }} />
           Create Zone
@@ -167,7 +231,6 @@ export default function ZonesPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {/* Zone Name */}
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
                   Zone Name *
@@ -176,7 +239,7 @@ export default function ZonesPage() {
                   type="text"
                   value={newZone.name}
                   onChange={(e) => setNewZone({ ...newZone, name: e.target.value })}
-                  placeholder="e.g., Karachi Central Zone"
+                  placeholder="e.g., Bahawalpur Central Zone"
                   style={{
                     width: '100%',
                     padding: '12px',
@@ -187,13 +250,12 @@ export default function ZonesPage() {
                 />
               </div>
 
-              {/* Coordinates Selection */}
               <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '12px' }}>
                   📍 Select Zone Location
                 </label>
                 <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '16px' }}>
-                  Enter coordinates or click the button below to open Google Maps for visual selection
+                  Enter coordinates or use Google Maps to find the exact location
                 </p>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
@@ -201,8 +263,8 @@ export default function ZonesPage() {
                     <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Latitude</label>
                     <input
                       type="number"
-                      value={newZone.center.lat}
-                      onChange={(e) => setNewZone({ ...newZone, center: { ...newZone.center, lat: parseFloat(e.target.value) } })}
+                      value={newZone.center_lat}
+                      onChange={(e) => setNewZone({ ...newZone, center_lat: parseFloat(e.target.value) })}
                       step="0.000001"
                       style={{
                         width: '100%',
@@ -217,8 +279,8 @@ export default function ZonesPage() {
                     <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Longitude</label>
                     <input
                       type="number"
-                      value={newZone.center.lng}
-                      onChange={(e) => setNewZone({ ...newZone, center: { ...newZone.center, lng: parseFloat(e.target.value) } })}
+                      value={newZone.center_lng}
+                      onChange={(e) => setNewZone({ ...newZone, center_lng: parseFloat(e.target.value) })}
                       step="0.000001"
                       style={{
                         width: '100%',
@@ -232,7 +294,7 @@ export default function ZonesPage() {
                 </div>
 
                 <button
-                  onClick={() => openGoogleMaps(newZone.center)}
+                  onClick={() => openGoogleMaps(newZone.center_lat, newZone.center_lng)}
                   style={{
                     width: '100%',
                     padding: '12px',
@@ -252,27 +314,16 @@ export default function ZonesPage() {
                   <MapPin style={{ width: '18px', height: '18px' }} />
                   Open in Google Maps
                 </button>
-                
-                <div style={{ marginTop: '12px', padding: '12px', background: '#eff6ff', borderRadius: '6px', border: '1px solid #bfdbfe' }}>
-                  <p style={{ fontSize: '12px', color: '#1e40af', fontWeight: '600', marginBottom: '4px' }}>💡 How to find coordinates:</p>
-                  <ol style={{ fontSize: '11px', color: '#6b7280', margin: 0, paddingLeft: '20px' }}>
-                    <li>Click "Open in Google Maps" button above</li>
-                    <li>Right-click on the desired location on the map</li>
-                    <li>Copy the latitude and longitude from the popup</li>
-                    <li>Paste them into the input fields above</li>
-                  </ol>
-                </div>
               </div>
 
-              {/* Radius */}
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
                   Radius (km) *
                 </label>
                 <input
                   type="number"
-                  value={newZone.radius}
-                  onChange={(e) => setNewZone({ ...newZone, radius: parseFloat(e.target.value) })}
+                  value={newZone.radius_km}
+                  onChange={(e) => setNewZone({ ...newZone, radius_km: parseFloat(e.target.value) })}
                   min="0.1"
                   step="0.1"
                   style={{
@@ -283,15 +334,12 @@ export default function ZonesPage() {
                     fontSize: '14px'
                   }}
                 />
-                <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
-                  Set the radius in kilometers around the center point
-                </p>
               </div>
 
-              {/* Action Buttons */}
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
                 <button
                   onClick={() => setShowAddModal(false)}
+                  disabled={isSubmitting}
                   style={{
                     padding: '12px 24px',
                     background: '#f3f4f6',
@@ -300,13 +348,14 @@ export default function ZonesPage() {
                     borderRadius: '8px',
                     fontSize: '14px',
                     fontWeight: '600',
-                    cursor: 'pointer'
+                    cursor: isSubmitting ? 'not-allowed' : 'pointer'
                   }}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCreateZone}
+                  disabled={isSubmitting}
                   style={{
                     padding: '12px 24px',
                     background: 'linear-gradient(90deg, #2563eb, #1e40af)',
@@ -315,14 +364,15 @@ export default function ZonesPage() {
                     borderRadius: '8px',
                     fontSize: '14px',
                     fontWeight: '600',
-                    cursor: 'pointer',
+                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px'
+                    gap: '8px',
+                    opacity: isSubmitting ? 0.6 : 1
                   }}
                 >
                   <Save style={{ width: '18px', height: '18px' }} />
-                  Create Zone
+                  {isSubmitting ? 'Creating...' : 'Create Zone'}
                 </button>
               </div>
             </div>
@@ -331,100 +381,114 @@ export default function ZonesPage() {
       )}
 
       {/* Zones Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
-        {zones.map((zone) => (
-          <div key={zone.id} style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            padding: '24px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-            border: '2px solid',
-            borderColor: zone.status === "active" ? '#86efac' : '#e5e7eb'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <MapPin style={{ width: '20px', height: '20px', color: '#2563eb' }} />
-                  <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>{zone.name}</h3>
-                </div>
-                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>
-                  {zone.status === "active" ? (
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#059669' }}>
-                      <CheckCircle style={{ width: '14px', height: '14px' }} />
-                      Active
-                    </span>
-                  ) : (
-                    <span style={{ color: '#9ca3af' }}>Inactive</span>
-                  )}
-                </p>
-              </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button 
-                  onClick={() => alert("Edit functionality coming soon!")}
-                  title="Edit zone"
-                  style={{
-                    padding: '6px',
-                    border: 'none',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    borderRadius: '6px'
-                  }}>
-                  <Edit style={{ width: '18px', height: '18px', color: '#6b7280' }} />
-                </button>
-                <button 
-                  onClick={() => handleDeleteZone(zone.id)}
-                  title="Delete zone"
-                  style={{
-                    padding: '6px',
-                    border: 'none',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    borderRadius: '6px'
-                  }}>
-                  <Trash2 style={{ width: '18px', height: '18px', color: '#dc2626' }} />
-                </button>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
-              <div>
-                <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Center Coordinates</p>
-                <button
-                  onClick={() => openGoogleMaps(zone.center)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    background: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 0
-                  }}
-                >
-                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#3b82f6', textDecoration: 'underline' }}>
-                    {zone.center.lat}, {zone.center.lng}
+      {zones.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+          <MapPin style={{ width: '48px', height: '48px', color: '#9ca3af', margin: '0 auto 16px' }} />
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>No Zones Yet</h3>
+          <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '16px' }}>Create your first zone to get started</p>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
+          {zones.map((zone) => (
+            <div key={zone.id} style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              padding: '24px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              border: '2px solid',
+              borderColor: zone.active ? '#86efac' : '#e5e7eb'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <MapPin style={{ width: '20px', height: '20px', color: '#2563eb' }} />
+                    <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>{zone.name}</h3>
+                  </div>
+                  <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>
+                    {zone.active ? (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#059669' }}>
+                        <CheckCircle style={{ width: '14px', height: '14px' }} />
+                        Active
+                      </span>
+                    ) : (
+                      <span style={{ color: '#9ca3af' }}>Inactive</span>
+                    )}
                   </p>
-                  <MapPin style={{ width: '14px', height: '14px', color: '#3b82f6' }} />
-                </button>
-              </div>
-              <div>
-                <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Radius</p>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>{zone.radius} km</p>
-              </div>
-              <div style={{ display: 'flex', gap: '24px' }}>
-                <div>
-                  <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Vehicles</p>
-                  <p style={{ fontSize: '18px', fontWeight: '600', color: '#2563eb' }}>{zone.vehicles}</p>
                 </div>
-                <div>
-                  <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Violations</p>
-                  <p style={{ fontSize: '18px', fontWeight: '600', color: '#dc2626' }}>{zone.violations}</p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    onClick={() => alert("Edit functionality coming soon!")}
+                    title="Edit zone"
+                    style={{
+                      padding: '6px',
+                      border: 'none',
+                      background: 'transparent',
+                      cursor: 'pointer',
+                      borderRadius: '6px'
+                    }}>
+                    <Edit style={{ width: '18px', height: '18px', color: '#6b7280' }} />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteZone(zone.id)}
+                    disabled={isSubmitting}
+                    title="Delete zone"
+                    style={{
+                      padding: '6px',
+                      border: 'none',
+                      background: 'transparent',
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                      borderRadius: '6px',
+                      opacity: isSubmitting ? 0.5 : 1
+                    }}>
+                    <Trash2 style={{ width: '18px', height: '18px', color: '#dc2626' }} />
+                  </button>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+                {zone.center_lat && zone.center_lng && (
+                  <div>
+                    <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Center Coordinates</p>
+                    <button
+                      onClick={() => openGoogleMaps(zone.center_lat, zone.center_lng)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: 0
+                      }}
+                    >
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#3b82f6', textDecoration: 'underline' }}>
+                        {zone.center_lat}, {zone.center_lng}
+                      </p>
+                      <MapPin style={{ width: '14px', height: '14px', color: '#3b82f6' }} />
+                    </button>
+                  </div>
+                )}
+                {zone.radius_km && (
+                  <div>
+                    <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Radius</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>{zone.radius_km} km</p>
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: '24px' }}>
+                  <div>
+                    <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Vehicles</p>
+                    <p style={{ fontSize: '18px', fontWeight: '600', color: '#2563eb' }}>{zone.vehicle_count}</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Violations</p>
+                    <p style={{ fontSize: '18px', fontWeight: '600', color: '#dc2626' }}>{zone.violation_count}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
