@@ -12,6 +12,15 @@ const mockVehicles = [
     last_odometer: 45230,
     avg_mileage: 12.5,
     next_service_km: 46000,
+    fuelEfficiency: 12.5,
+    totalFuelCost: 194234,
+    totalKmDriven: 6250,
+    costPerKm: 31.08,
+    maintenanceHistory: [
+      { date: "2024-10-20", type: "Oil Change", cost: 3500, mileage: 45000 },
+      { date: "2024-08-15", type: "Battery Replacement", cost: 5000, mileage: 44000 },
+      { date: "2024-05-10", type: "Tire Replacement", cost: 8000, mileage: 43000 }
+    ]
   },
   {
     id: "2",
@@ -21,6 +30,14 @@ const mockVehicles = [
     last_odometer: 78920,
     avg_mileage: 10.2,
     next_service_km: 80000,
+    fuelEfficiency: 10.2,
+    totalFuelCost: 159832,
+    totalKmDriven: 8900,
+    costPerKm: 17.96,
+    maintenanceHistory: [
+      { date: "2024-10-05", type: "General Service", cost: 4500, mileage: 78900 },
+      { date: "2024-07-20", type: "Brake Pad Replacement", cost: 5500, mileage: 76500 }
+    ]
   },
 ];
 
@@ -80,6 +97,9 @@ export default function VehiclesTable() {
                 Next Service
               </th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#374151' }}>
+                Cost/Km
+              </th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#374151' }}>
                 Actions
               </th>
             </tr>
@@ -94,6 +114,9 @@ export default function VehiclesTable() {
                 <td style={{ padding: '12px 16px', color: '#111827' }}>{vehicle.avg_mileage} km/L</td>
                 <td style={{ padding: '12px 16px', color: '#111827' }}>
                   {vehicle.next_service_km.toLocaleString()} km
+                </td>
+                <td style={{ padding: '12px 16px', color: '#111827', fontWeight: '600' }}>
+                  ₹{vehicle.costPerKm.toFixed(2)}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <button style={{
