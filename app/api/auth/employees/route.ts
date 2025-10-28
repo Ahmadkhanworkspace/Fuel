@@ -12,16 +12,8 @@ export async function GET(request: NextRequest) {
 
     const where = role ? { role: role as any } : {};
 
-    const employees = await prisma.employee.findMany({
+    const employees = await (prisma as any).employee.findMany({
       where,
-      include: {
-        zone: {
-          select: {
-            name: true,
-            id: true
-          }
-        }
-      },
       orderBy: { created_at: 'desc' }
     });
 
@@ -64,7 +56,7 @@ export async function POST(request: NextRequest) {
     // Generate username if not provided
     const finalUsername = username || email.split('@')[0] + '_' + Math.random().toString(36).substring(7);
 
-    const employee = await prisma.employee.create({
+    const employee = await (prisma as any).employee.create({
       data: {
         employee_code,
         name,
@@ -100,7 +92,7 @@ export async function PATCH(request: NextRequest) {
     // Remove sensitive fields that shouldn't be updated via API
     const { password_hash, password_reset_token, ...safeData } = updateData;
 
-    const employee = await prisma.employee.update({
+    const employee = await (prisma as any).employee.update({
       where: { id },
       data: safeData
     });
@@ -124,7 +116,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Employee ID is required' }, { status: 400 });
     }
 
-    await prisma.employee.delete({
+    await (prisma as any).employee.delete({
       where: { id }
     });
 
