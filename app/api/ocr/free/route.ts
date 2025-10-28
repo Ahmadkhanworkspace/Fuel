@@ -70,7 +70,7 @@ function parseReceiptText(text: string) {
   };
 
   // Extract liters (e.g., "45.50 L" or "45.50L" or "45.50 liters")
-  const litersMatch = text.match(/(\d+\.?\d*)\s*[Ll]/?\s*(?:iters)?|(\d+\.?\d*)\s*Liters/);
+  const litersMatch = text.match(/(\d+\.?\d*)\s*[Ll]\s*(?:iters)?|(\d+\.?\d*)\s*Liters/);
   if (litersMatch) {
     result.liters = parseFloat(litersMatch[1] || litersMatch[2]);
   }
