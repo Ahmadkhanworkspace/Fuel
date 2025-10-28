@@ -1,39 +1,34 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Employee {
-  id                    String   @id @default(uuid())
-  employee_code         String   @unique
-  name                  String
-  email                 String   @unique
-  username              String   @unique @default("")
-  password_hash         String   @default("temp_password_to_change")
-  phone                 String?
-  role                  Role     @default(employee)
-  department            String?  @default("Operations")
-  zone_id               String?
-  zone                  Zone?    @relation("EmployeeZone", fields: [zone_id], references: [id])
-  allowed_quota_liters   Float    @default(100)
-  is_banned             Boolean  @default(false)
-  allowed_zones         String[]
-  password_reset_token  String?  @unique
+  id                     String    @id @default(uuid())
+  employee_code          String    @unique
+  name                   String
+  email                  String    @unique
+  username               String    @unique @default("")
+  password_hash          String    @default("temp_password_to_change")
+  phone                  String?
+  role                   Role      @default(employee)
+  department             String?   @default("Operations")
+  zone_id                String?
+  allowed_quota_liters   Float     @default(100)
+  is_banned              Boolean   @default(false)
+  allowed_zones          String[]
+  password_reset_token   String?   @unique
   password_reset_expires DateTime?
-  created_at            DateTime @default(now())
-  updated_at            DateTime @updatedAt
-
-  // Relations
-  vehicles              Vehicle[]
-  claims                Claim[]
-  approver_claims       Claim[]  @relation("ApproverClaims")
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
+  approver_claims        Claim[]   @relation("ApproverClaims")
+  claims                 Claim[]
+  zone                   Zone?     @relation("EmployeeZone", fields: [zone_id], references: [id])
+  vehicles               Vehicle[]
 
   @@index([zone_id])
   @@index([role])
@@ -41,50 +36,46 @@ model Employee {
 }
 
 model Vehicle {
-  id                  String    @id @default(uuid())
-  reg_no              String    @unique
-  model               String?
+  id                   String    @id @default(uuid())
+  reg_no               String    @unique
+  model                String?
   assigned_employee_id String?
-  assigned_employee   Employee? @relation(fields: [assigned_employee_id], references: [id])
   avg_mileage          Float?
-  last_odometer       Int?
+  last_odometer        Int?
   next_service_km      Int?
   created_at           DateTime  @default(now())
   updated_at           DateTime  @updatedAt
-
-  // Relations
-  claims              Claim[]
+  claims               Claim[]
+  assigned_employee    Employee? @relation(fields: [assigned_employee_id], references: [id])
 
   @@index([assigned_employee_id])
   @@map("vehicles")
 }
 
 model Claim {
-  id                String        @id @default(uuid())
-  employee_id       String
-  employee          Employee      @relation(fields: [employee_id], references: [id])
-  vehicle_id         String
-  vehicle            Vehicle       @relation(fields: [vehicle_id], references: [id])
-  pump_id            String?
-  liters_claimed     Float
-  price              Decimal
-  odometer_reading   Int?
-  gps_lat            Float?
-  gps_lng            Float?
-  photos             String[]
-  ocr_text           Json?
-  ocr_confidence      Float?
-  fraud_score        Float?
-  status             ClaimStatus  @default(pending)
-  approver_id        String?
-  approver            Employee?   @relation("ApproverClaims", fields: [approver_id], references: [id])
-  rejection_reason   String?
-  created_at         DateTime      @default(now())
-  updated_at         DateTime      @updatedAt
-
-  // Relations
-  images             Image[]
-  location_logs       LocationLog[]
+  id               String        @id @default(uuid())
+  employee_id      String
+  vehicle_id       String
+  pump_id          String?
+  liters_claimed   Float
+  price            Decimal
+  odometer_reading Int?
+  gps_lat          Float?
+  gps_lng          Float?
+  photos           String[]
+  ocr_text         Json?
+  ocr_confidence   Float?
+  fraud_score      Float?
+  status           ClaimStatus   @default(pending)
+  approver_id      String?
+  rejection_reason String?
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+  approver         Employee?     @relation("ApproverClaims", fields: [approver_id], references: [id])
+  employee         Employee      @relation(fields: [employee_id], references: [id])
+  vehicle          Vehicle       @relation(fields: [vehicle_id], references: [id])
+  images           Image[]
+  location_logs    LocationLog[]
 
   @@index([employee_id])
   @@index([vehicle_id])
@@ -96,52 +87,50 @@ model Claim {
 model Image {
   id             String    @id @default(uuid())
   claim_id       String
-  claim          Claim     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
   type           ImageType
   file_url       String
   checksum       String?
   phash          String?
   exif_timestamp DateTime?
   uploaded_at    DateTime  @default(now())
+  claim          Claim     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
 
   @@index([claim_id])
   @@map("images")
 }
 
 model Zone {
-  id             String    @id @default(uuid())
-  name           String
-  center_lat     Float?
-  center_lng     Float?
-  radius_km      Float?
-  geojson        Json?
-  active         Boolean   @default(true)
-  vehicle_count  Int       @default(0)
-  violation_count Int      @default(0)
-  created_at     DateTime  @default(now())
-  updated_at     DateTime  @default(now()) @updatedAt
-
-  // Relations
-  employees      Employee[] @relation("EmployeeZone")
-  location_logs  LocationLog[]
+  id              String        @id @default(uuid())
+  name            String
+  center_lat      Float?
+  center_lng      Float?
+  radius_km       Float?
+  geojson         Json?
+  active          Boolean       @default(true)
+  vehicle_count   Int           @default(0)
+  violation_count Int           @default(0)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @default(now()) @updatedAt
+  employees       Employee[]    @relation("EmployeeZone")
+  location_logs   LocationLog[]
 
   @@index([active])
   @@map("zones")
 }
 
 model LocationLog {
-  id           String    @id @default(uuid())
-  claim_id     String?
-  claim        Claim?    @relation(fields: [claim_id], references: [id])
-  employee_id  String
-  vehicle_id   String
-  latitude     Float
-  longitude    Float
-  address      String?
+  id             String   @id @default(uuid())
+  claim_id       String?
+  employee_id    String
+  vehicle_id     String
+  latitude       Float
+  longitude      Float
+  address        String?
   is_within_zone Boolean
-  zone_id      String?
-  zone         Zone?     @relation(fields: [zone_id], references: [id])
-  timestamp    DateTime  @default(now())
+  zone_id        String?
+  timestamp      DateTime @default(now())
+  claim          Claim?   @relation(fields: [claim_id], references: [id])
+  zone           Zone?    @relation(fields: [zone_id], references: [id])
 
   @@index([claim_id])
   @@index([employee_id])

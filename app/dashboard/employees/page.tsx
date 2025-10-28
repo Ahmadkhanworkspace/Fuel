@@ -887,34 +887,64 @@ export default function EmployeesPage() {
                       </span>
                     )}
                   </div>
-                  <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '12px' }}>
-                    {employee.employee_code} • {employee.email}
-                  </p>
-                  
-                  {employee.username && (
-                    <p style={{ fontSize: '13px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Shield style={{ width: '14px', height: '14px' }} />
-                      Username: <strong>{employee.username}</strong>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '12px' }}>
+                    <p style={{ fontSize: '13px', color: '#6b7280', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
+                      📋 {employee.employee_code}
                     </p>
-                  )}
-
-                  <div style={{ display: 'flex', gap: '24px', marginTop: '12px', fontSize: '13px' }}>
+                    <p style={{ fontSize: '13px', color: '#6b7280', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
+                      📧 {employee.email}
+                    </p>
+                    <p style={{ fontSize: '13px', color: '#6b7280', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
+                      📅 Joined: {new Date(employee.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginTop: '12px' }}>
+                    {employee.username && (
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>👤 Username</p>
+                        <p style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>{employee.username}</p>
+                      </div>
+                    )}
                     {employee.phone && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#6b7280' }}>
-                        <Phone style={{ width: '14px', height: '14px' }} />
-                        {employee.phone}
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>📞 Phone</p>
+                        <p style={{ fontSize: '14px', color: '#374151' }}>{employee.phone}</p>
                       </div>
                     )}
-                    {employee.zone && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#6b7280' }}>
-                        <MapPin style={{ width: '14px', height: '14px' }} />
-                        {employee.zone.name}
+                    {employee.department && (
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>🏢 Department</p>
+                        <p style={{ fontSize: '14px', color: '#374151' }}>{employee.department}</p>
                       </div>
                     )}
-                    <div style={{ color: '#059669' }}>
-                      Quota: {employee.allowed_quota_liters}L/month
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>⛽ Fuel Quota</p>
+                      <p style={{ fontSize: '14px', fontWeight: '600', color: '#059669' }}>{employee.allowed_quota_liters}L/month</p>
                     </div>
                   </div>
+
+                  {employee.zone && (
+                    <div style={{ marginTop: '12px', padding: '12px', background: '#eff6ff', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+                      <p style={{ fontSize: '12px', color: '#1e40af', fontWeight: '600', marginBottom: '4px' }}>📍 Authorized Zone</p>
+                      <p style={{ fontSize: '14px', color: '#1e40af' }}>{employee.zone.name}</p>
+                    </div>
+                  )}
+
+                  {employee.allowed_zones && employee.allowed_zones.length > 0 && (
+                    <div style={{ marginTop: '8px', padding: '12px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #86efac' }}>
+                      <p style={{ fontSize: '12px', color: '#059669', fontWeight: '600', marginBottom: '4px' }}>✅ Allowed Zones</p>
+                      <p style={{ fontSize: '14px', color: '#059669' }}>
+                        {employee.allowed_zones.join(', ') || 'All zones'}
+                      </p>
+                    </div>
+                  )}
+
+                  {employee.is_banned && (
+                    <div style={{ marginTop: '12px', padding: '12px', background: '#fee2e2', borderRadius: '8px', border: '1px solid #fecaca' }}>
+                      <p style={{ fontSize: '12px', color: '#dc2626', fontWeight: '600' }}>⚠️ This employee is banned from system access</p>
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ display: 'flex', gap: '8px' }}>
