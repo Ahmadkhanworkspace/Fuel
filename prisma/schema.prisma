@@ -15,8 +15,8 @@ model Employee {
   employee_code         String   @unique
   name                  String
   email                 String   @unique
-  username              String   @unique
-  password_hash         String
+  username              String   @unique @default("")
+  password_hash         String   @default("temp_password_to_change")
   phone                 String?
   role                  Role     @default(employee)
   department            String?  @default("Operations")
@@ -119,7 +119,7 @@ model Zone {
   vehicle_count  Int       @default(0)
   violation_count Int      @default(0)
   created_at     DateTime  @default(now())
-  updated_at     DateTime  @updatedAt
+  updated_at     DateTime  @default(now()) @updatedAt
 
   // Relations
   employees      Employee[] @relation("EmployeeZone")
