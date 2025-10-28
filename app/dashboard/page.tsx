@@ -650,41 +650,91 @@ export default async function DashboardPage() {
             Monthly Fuel Cost Trends
           </h3>
           <div style={{ height: '280px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            {/* Line Chart Visual */}
-            <div style={{ position: 'relative', height: '200px', marginBottom: '20px' }}>
-              <svg width="100%" height="100%" viewBox="0 0 400 200" style={{ maxWidth: '100%' }}>
-                {/* Grid Lines */}
-                <line x1="40" y1="160" x2="360" y2="160" stroke="#e5e7eb" strokeWidth="1" />
-                <line x1="40" y1="120" x2="360" y2="120" stroke="#e5e7eb" strokeWidth="1" />
-                <line x1="40" y1="80" x2="360" y2="80" stroke="#e5e7eb" strokeWidth="1" />
-                <line x1="40" y1="40" x2="360" y2="40" stroke="#e5e7eb" strokeWidth="1" />
-                
-                {/* Cost Trend Line */}
-                <polyline 
-                  points="50,130 82,115 114,105 146,90 178,75 210,65 242,70 274,80 306,85 338,95" 
-                  fill="none" 
-                  stroke="#3b82f6" 
-                  strokeWidth="3"
-                />
-                {/* Dots */}
-                {[50,82,114,146,178,210,242,274,306,338].map((x, i) => (
-                  <circle key={i} cx={x} cy={[130,115,105,90,75,65,70,80,85,95][i]} r="4" fill="#3b82f6" />
-                ))}
-                
-                {/* Month Labels */}
-                <text x="50" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Jan</text>
-                <text x="82" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Feb</text>
-                <text x="114" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Mar</text>
-                <text x="146" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Apr</text>
-                <text x="178" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">May</text>
-                <text x="210" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Jun</text>
-                <text x="242" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Jul</text>
-                <text x="274" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Aug</text>
-                <text x="306" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Sep</text>
-                <text x="338" y="185" fontSize="10" fill="#6b7280" textAnchor="middle">Oct</text>
-              </svg>
-              <div style={{ position: 'absolute', top: '8px', right: '8px', background: '#eff6ff', padding: '6px 12px', borderRadius: '6px', border: '1px solid #bfdbfe' }}>
-                <span style={{ fontSize: '11px', color: '#1e40af', fontWeight: '600' }}>₹{(Math.random() * 200 + 180).toFixed(0)}K</span>
+            {/* Cost Trend Chart - Bar Chart Style */}
+            <div style={{ height: '200px', display: 'flex', alignItems: 'flex-end', gap: '10px', marginBottom: '20px' }}>
+              {/* January - ₹180K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '45%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹180K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Jan</span>
+              </div>
+              {/* February - ₹195K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '52%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹195K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Feb</span>
+              </div>
+              {/* March - ₹165K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '42%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹165K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Mar</span>
+              </div>
+              {/* April - ₹210K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '55%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹210K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Apr</span>
+              </div>
+              {/* May - ₹225K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #10b981, #34d399)', borderRadius: '6px 6px 0 0', height: '60%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#059669' }}>₹225K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>May</span>
+              </div>
+              {/* June - ₹240K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #10b981, #34d399)', borderRadius: '6px 6px 0 0', height: '65%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#059669' }}>₹240K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Jun</span>
+              </div>
+              {/* July - ₹195K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #8b5cf6, #a78bfa)', borderRadius: '6px 6px 0 0', height: '52%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#7c3aed' }}>₹195K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Jul</span>
+              </div>
+              {/* August - ₹215K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #8b5cf6, #a78bfa)', borderRadius: '6px 6px 0 0', height: '58%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#7c3aed' }}>₹215K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Aug</span>
+              </div>
+              {/* September - ₹250K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #f59e0b, #fbbf24)', borderRadius: '6px 6px 0 0', height: '72%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#d97706' }}>₹250K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Sep</span>
+              </div>
+              {/* October - ₹270K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #f59e0b, #fbbf24)', borderRadius: '6px 6px 0 0', height: '78%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#d97706' }}>₹270K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Oct</span>
+              </div>
+              {/* November - ₹245K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #ef4444, #f87171)', borderRadius: '6px 6px 0 0', height: '66%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#dc2626' }}>₹245K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Nov</span>
+              </div>
+              {/* December - ₹235K */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '100%', background: 'linear-gradient(to top, #ef4444, #f87171)', borderRadius: '6px 6px 0 0', height: '63%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#dc2626' }}>₹235K</div>
+                </div>
+                <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Dec</span>
               </div>
             </div>
             {/* Stats */}
