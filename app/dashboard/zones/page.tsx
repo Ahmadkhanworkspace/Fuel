@@ -1,10 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Plus, Edit, Trash2, CheckCircle } from "lucide-react";
+import { MapPin, Plus, Edit, Trash2, CheckCircle, Save, X } from "lucide-react";
+
+interface Zone {
+  id: string;
+  name: string;
+  center: { lat: number; lng: number };
+  radius: number;
+  status: "active" | "inactive";
+  vehicles: number;
+  violations: number;
+}
 
 export default function ZonesPage() {
-  const [zones, setZones] = useState([
+  const [zones, setZones] = useState<Zone[]>([
     {
       id: "1",
       name: "Mumbai Central Zone",
@@ -35,6 +45,11 @@ export default function ZonesPage() {
   ]);
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [newZone, setNewZone] = useState({
+    name: "",
+    center: { lat: 24.8607, lng: 67.0011 }, // Default Karachi center
+    radius: 5
+  });
 
   const handleDeleteZone = (id: string) => {
     const zoneName = zones.find(z => z.id === id)?.name;
@@ -52,6 +67,33 @@ export default function ZonesPage() {
     ));
   };
 
+  const handleCreateZone = () => {
+    if (!newZone.name || newZone.radius <= 0) {
+      alert("Please fill in all fields correctly!");
+      return;
+    }
+
+    const zone: Zone = {
+      id: Date.now().toString(),
+      name: newZone.name,
+      center: newZone.center,
+      radius: newZone.radius,
+      status: "active",
+      vehicles: 0,
+      violations: 0
+    };
+
+    setZones([...zones, zone]);
+    setShowAddModal(false);
+    setNewZone({ name: "", center: { lat: 24.8607, lng: 67.0011 }, radius: 5 });
+    alert(`Zone "${zone.name}" created successfully!`);
+  };
+
+  const openGoogleMaps = (center: { lat: number; lng: number }) => {
+    const url = `https://www.google.com/maps?q=${center.lat},${center.lng}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
@@ -61,11 +103,11 @@ export default function ZonesPage() {
             Zones
           </h1>
           <p style={{ color: '#4b5563', fontSize: '14px' }}>
-            Manage geofencing zones for fuel claims
+            Manage geofencing zones for fuel claims with Google Maps integration
           </p>
         </div>
         <button 
-          onClick={() => alert("Create zone functionality coming soon!")}
+          onClick={() => setShowAddModal(true)}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -84,6 +126,209 @@ export default function ZonesPage() {
           Create Zone
         </button>
       </div>
+
+      {/* Create Zone Modal */}
+      {showAddModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '24px',
+            maxWidth: '800px',
+            width: '90%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#111827' }}>Create New Zone</h2>
+              <button
+                onClick={() => setShowAddModal(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#6b7280'
+                }}
+              >
+                <X style={{ width: '24px', height: '24px' }} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Zone Name */}
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  Zone Name *
+                </label>
+                <input
+                  type="text"
+                  value={newZone.name}
+                  onChange={(e) => setNewZone({ ...newZone, name: e.target.value })}
+                  placeholder="e.g., Karachi Central Zone"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '8px',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+
+              {/* Coordinates Selection */}
+              <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '12px' }}>
+                  📍 Select Zone Location
+                </label>
+                <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '16px' }}>
+                  Enter coordinates or click the button below to open Google Maps for visual selection
+                </p>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Latitude</label>
+                    <input
+                      type="number"
+                      value={newZone.center.lat}
+                      onChange={(e) => setNewZone({ ...newZone, center: { ...newZone.center, lat: parseFloat(e.target.value) } })}
+                      step="0.000001"
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        fontSize: '14px'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Longitude</label>
+                    <input
+                      type="number"
+                      value={newZone.center.lng}
+                      onChange={(e) => setNewZone({ ...newZone, center: { ...newZone.center, lng: parseFloat(e.target.value) } })}
+                      step="0.000001"
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        fontSize: '14px'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => openGoogleMaps(newZone.center)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    background: '#3b82f6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <MapPin style={{ width: '18px', height: '18px' }} />
+                  Open in Google Maps
+                </button>
+                
+                <div style={{ marginTop: '12px', padding: '12px', background: '#eff6ff', borderRadius: '6px', border: '1px solid #bfdbfe' }}>
+                  <p style={{ fontSize: '12px', color: '#1e40af', fontWeight: '600', marginBottom: '4px' }}>💡 How to find coordinates:</p>
+                  <ol style={{ fontSize: '11px', color: '#6b7280', margin: 0, paddingLeft: '20px' }}>
+                    <li>Click "Open in Google Maps" button above</li>
+                    <li>Right-click on the desired location on the map</li>
+                    <li>Copy the latitude and longitude from the popup</li>
+                    <li>Paste them into the input fields above</li>
+                  </ol>
+                </div>
+              </div>
+
+              {/* Radius */}
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  Radius (km) *
+                </label>
+                <input
+                  type="number"
+                  value={newZone.radius}
+                  onChange={(e) => setNewZone({ ...newZone, radius: parseFloat(e.target.value) })}
+                  min="0.1"
+                  step="0.1"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '8px',
+                    fontSize: '14px'
+                  }}
+                />
+                <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
+                  Set the radius in kilometers around the center point
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  style={{
+                    padding: '12px 24px',
+                    background: '#f3f4f6',
+                    color: '#374151',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreateZone}
+                  style={{
+                    padding: '12px 24px',
+                    background: 'linear-gradient(90deg, #2563eb, #1e40af)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <Save style={{ width: '18px', height: '18px' }} />
+                  Create Zone
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Zones Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
@@ -144,7 +389,23 @@ export default function ZonesPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
               <div>
                 <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Center Coordinates</p>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>{zone.center.lat}, {zone.center.lng}</p>
+                <button
+                  onClick={() => openGoogleMaps(zone.center)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0
+                  }}
+                >
+                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#3b82f6', textDecoration: 'underline' }}>
+                    {zone.center.lat}, {zone.center.lng}
+                  </p>
+                  <MapPin style={{ width: '14px', height: '14px', color: '#3b82f6' }} />
+                </button>
               </div>
               <div>
                 <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Radius</p>
