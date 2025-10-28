@@ -7,7 +7,7 @@ import type { LocationLog } from "@/lib/supabase/types";
 interface LocationLogWithDetails extends LocationLog {
   employee?: { name: string; employee_code: string };
   vehicle?: { reg_no: string; model: string };
-  zone?: { name: string };
+  zone?: { name: string | null };
 }
 
 export default function LocationLogsTable({ initialLogs }: { initialLogs: LocationLogWithDetails[] }) {

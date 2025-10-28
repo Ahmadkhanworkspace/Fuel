@@ -14,8 +14,8 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<employees.Row, 'created_at' | 'updated_at'>;
-        Update: Partial<employees.Insert>;
+        Insert: Omit<Database['public']['Tables']['employees']['Row'], 'created_at' | 'updated_at'>;
+        Update: Partial<Database['public']['Tables']['employees']['Insert']>;
       };
       vehicles: {
         Row: {
@@ -29,8 +29,8 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<vehicles.Row, 'created_at' | 'updated_at'>;
-        Update: Partial<vehicles.Insert>;
+        Insert: Omit<Database['public']['Tables']['vehicles']['Row'], 'created_at' | 'updated_at'>;
+        Update: Partial<Database['public']['Tables']['vehicles']['Insert']>;
       };
       claims: {
         Row: {
@@ -53,8 +53,8 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<claims.Row, 'created_at' | 'updated_at'>;
-        Update: Partial<claims.Insert>;
+        Insert: Omit<Database['public']['Tables']['claims']['Row'], 'created_at' | 'updated_at'>;
+        Update: Partial<Database['public']['Tables']['claims']['Insert']>;
       };
       zones: {
         Row: {
@@ -64,8 +64,8 @@ export interface Database {
           active: boolean;
           created_at: string;
         };
-        Insert: Omit<zones.Row, 'created_at'>;
-        Update: Partial<zones.Insert>;
+        Insert: Omit<Database['public']['Tables']['zones']['Row'], 'created_at'>;
+        Update: Partial<Database['public']['Tables']['zones']['Insert']>;
       };
       location_logs: {
         Row: {

@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth";
 import RolesManagement from "@/components/dashboard/roles-management";
 
+export const dynamic = 'force-dynamic';
+
 export default async function RolesPage() {
   await requireRole(['admin']);
 

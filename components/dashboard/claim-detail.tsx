@@ -36,7 +36,7 @@ export default function ClaimDetail({ claim }: { claim: any }) {
       return;
     }
     // Implement rejection
-    console.log("Rejecting claim:", claim.id, reason);
+    console.log("Rejecting claim:", claim.id, rejectionReason);
   };
 
   return (
