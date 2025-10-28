@@ -186,7 +186,7 @@ export default function SettingsPage() {
                     >
                       <option value="PKR">₨ PKR</option>
                       <option value="USD">$ USD</option>
-                      <option value="INR">₹ INR</option>
+                      <option value="GBP">£ GBP</option>
                       <option value="EUR">€ EUR</option>
                     </select>
                   </div>

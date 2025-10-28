@@ -569,7 +569,7 @@ export default async function DashboardPage() {
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1e40af' }}>1,865.5L</div>
-                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹194,234</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>$194,234</div>
               </div>
             </div>
             {/* Employee 2 */}
@@ -583,7 +583,7 @@ export default async function DashboardPage() {
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#92400e' }}>1,247.8L</div>
-                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹129,832</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>$129,832</div>
               </div>
             </div>
             {/* Employee 3 */}
@@ -597,7 +597,7 @@ export default async function DashboardPage() {
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#047857' }}>987.3L</div>
-                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹102,832</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>$102,832</div>
               </div>
             </div>
             {/* Employee 4 */}
@@ -611,7 +611,7 @@ export default async function DashboardPage() {
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#6b21a8' }}>732.5L</div>
-                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹76,234</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>$76,234</div>
               </div>
             </div>
             {/* Employee 5 */}
@@ -625,7 +625,7 @@ export default async function DashboardPage() {
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#be185d' }}>612.4L</div>
-                <div style={{ fontSize: '11px', color: '#6b7280' }}>₹63,734</div>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>$63,734</div>
               </div>
             </div>
           </div>
@@ -652,87 +652,87 @@ export default async function DashboardPage() {
           <div style={{ height: '280px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             {/* Cost Trend Chart - Bar Chart Style */}
             <div style={{ height: '200px', display: 'flex', alignItems: 'flex-end', gap: '10px', marginBottom: '20px' }}>
-              {/* January - ₹180K */}
+              {/* January - $180K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '45%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹180K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>$180K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Jan</span>
               </div>
-              {/* February - ₹195K */}
+              {/* February - $195K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '52%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹195K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>$195K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Feb</span>
               </div>
-              {/* March - ₹165K */}
+              {/* March - $165K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '42%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹165K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>$165K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Mar</span>
               </div>
-              {/* April - ₹210K */}
+              {/* April - $210K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #3b82f6, #60a5fa)', borderRadius: '6px 6px 0 0', height: '55%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>₹210K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1e40af' }}>$210K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Apr</span>
               </div>
-              {/* May - ₹225K */}
+              {/* May - $225K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #10b981, #34d399)', borderRadius: '6px 6px 0 0', height: '60%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#059669' }}>₹225K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#059669' }}>$225K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>May</span>
               </div>
-              {/* June - ₹240K */}
+              {/* June - $240K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #10b981, #34d399)', borderRadius: '6px 6px 0 0', height: '65%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#059669' }}>₹240K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#059669' }}>$240K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Jun</span>
               </div>
-              {/* July - ₹195K */}
+              {/* July - $195K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #8b5cf6, #a78bfa)', borderRadius: '6px 6px 0 0', height: '52%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#7c3aed' }}>₹195K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#7c3aed' }}>$195K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Jul</span>
               </div>
-              {/* August - ₹215K */}
+              {/* August - $215K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #8b5cf6, #a78bfa)', borderRadius: '6px 6px 0 0', height: '58%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#7c3aed' }}>₹215K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#7c3aed' }}>$215K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Aug</span>
               </div>
-              {/* September - ₹250K */}
+              {/* September - $250K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #f59e0b, #fbbf24)', borderRadius: '6px 6px 0 0', height: '72%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#d97706' }}>₹250K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#d97706' }}>$250K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Sep</span>
               </div>
-              {/* October - ₹270K */}
+              {/* October - $270K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #f59e0b, #fbbf24)', borderRadius: '6px 6px 0 0', height: '78%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#d97706' }}>₹270K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#d97706' }}>$270K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Oct</span>
               </div>
-              {/* November - ₹245K */}
+              {/* November - $245K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #ef4444, #f87171)', borderRadius: '6px 6px 0 0', height: '66%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#dc2626' }}>₹245K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#dc2626' }}>$245K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Nov</span>
               </div>
-              {/* December - ₹235K */}
+              {/* December - $235K */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '100%', background: 'linear-gradient(to top, #ef4444, #f87171)', borderRadius: '6px 6px 0 0', height: '63%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#dc2626' }}>₹235K</div>
+                  <div style={{ position: 'absolute', top: '-20px', left: '0', right: '0', textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#dc2626' }}>$235K</div>
                 </div>
                 <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: '500' }}>Dec</span>
               </div>
@@ -741,11 +741,11 @@ export default async function DashboardPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
               <div>
                 <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Avg Monthly</div>
-                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#111827' }}>₹178,234</div>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#111827' }}>$178,234</div>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>This Month</div>
-                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#059669' }}>₹195,450</div>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#059669' }}>$195,450</div>
               </div>
             </div>
           </div>
