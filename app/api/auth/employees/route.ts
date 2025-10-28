@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
     const where = role ? { role: role as any } : {};
 
-    const employees = await (prisma as any).employee.findMany({
+    const employees = await prisma.employee.findMany({
       where,
       orderBy: { created_at: 'desc' }
     });
@@ -49,6 +49,8 @@ export async function POST(request: NextRequest) {
       password
     } = body;
 
+    console.log('Creating employee with data:', { employee_code, name, email });
+
     // Generate random password if not provided
     const generatedPassword = password || generateRandomPassword(12);
     const passwordHash = await hashPassword(generatedPassword);
@@ -56,7 +58,9 @@ export async function POST(request: NextRequest) {
     // Generate username if not provided
     const finalUsername = username || email.split('@')[0] + '_' + Math.random().toString(36).substring(7);
 
-    const employee = await (prisma as any).employee.create({
+    console.log('Generated credentials:', { username: finalUsername, passwordLength: generatedPassword.length });
+
+    const employee = await prisma.employee.create({
       data: {
         employee_code,
         name,
@@ -64,13 +68,15 @@ export async function POST(request: NextRequest) {
         username: finalUsername,
         password_hash: passwordHash,
         phone,
-        role,
-        department,
-        zone_id,
+        role: role || 'employee',
+        department: department || 'Operations',
+        zone_id: zone_id || null,
         allowed_quota_liters: allowed_quota_liters || 100,
         allowed_zones: allowed_zones || []
       }
     });
+
+    console.log('Employee created successfully:', employee.id);
 
     return NextResponse.json({
       ...employee,
@@ -79,7 +85,12 @@ export async function POST(request: NextRequest) {
     }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating employee:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Error stack:', error.stack);
+    return NextResponse.json({ 
+      error: error.message,
+      details: error.code,
+      hint: error.hint 
+    }, { status: 500 });
   }
 }
 
@@ -92,7 +103,7 @@ export async function PATCH(request: NextRequest) {
     // Remove sensitive fields that shouldn't be updated via API
     const { password_hash, password_reset_token, ...safeData } = updateData;
 
-    const employee = await (prisma as any).employee.update({
+    const employee = await prisma.employee.update({
       where: { id },
       data: safeData
     });
@@ -116,7 +127,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Employee ID is required' }, { status: 400 });
     }
 
-    await (prisma as any).employee.delete({
+    await prisma.employee.delete({
       where: { id }
     });
 
