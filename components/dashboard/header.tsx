@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import NotificationCenter from "./notification-center";
 
 interface HeaderProps {
   user: any;
@@ -47,6 +48,10 @@ export default function Header({ user, employee }: HeaderProps) {
               </span>
             </div>
           )}
+          
+          {/* Notification Center */}
+          <NotificationCenter />
+          
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#374151' }}>
             <User style={{ width: '16px', height: '16px' }} />
             <span>{user?.email || 'admin@svfms.com'}</span>

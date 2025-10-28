@@ -13,6 +13,8 @@ import {
   Shield,
   MapPinIcon,
   Users,
+  Bell,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +35,7 @@ const navigation: NavigationItem[] = [
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { name: "Employees", href: "/dashboard/employees", icon: Users, roles: ['admin'] },
   { name: "Role Management", href: "/dashboard/roles", icon: Shield, roles: ['admin'] },
+  { name: "Notifications", href: "/dashboard/notifications", icon: Mail, roles: ['admin'] },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

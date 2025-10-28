@@ -42,6 +42,14 @@ export default function SettingsPage() {
       zoneViolationAlert: true,
       dailySummaryReport: true,
       weeklyReportEmail: true,
+      claimApproved: true,
+      claimRejected: true,
+      maintenanceDue: true,
+      fuelQuotaLow: true,
+      licenseExpiry: true,
+      systemUpdates: true,
+      thresholdAlerts: true,
+      bulkActionComplete: true,
     },
     system: {
       enableAuditLog: true,
@@ -441,66 +449,221 @@ export default function SettingsPage() {
           {activeTab === "notifications" && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>Notification Settings</h2>
-              <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '24px' }}>Configure notification preferences</p>
+              <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '24px' }}>Configure notification preferences and alerts</p>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ marginTop: '8px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+              {/* Claim Notifications */}
+              <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🚗 Claim Notifications
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
                     <input
                       type="checkbox"
                       checked={settings.notifications.newClaimAlert}
                       onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, newClaimAlert: e.target.checked}})}
                       style={{ width: '18px', height: '18px' }}
                     />
-                    <span style={{ fontSize: '14px', color: '#374151' }}>Alert on new claim submission</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>New Claim Submission</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Alert admins when a new claim is submitted</div>
+                    </div>
                   </label>
-                </div>
 
-                <div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.claimApproved}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, claimApproved: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Claim Approved</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Notify employee when their claim is approved</div>
+                    </div>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.claimRejected}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, claimRejected: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Claim Rejected</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Notify employee when their claim is rejected</div>
+                    </div>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
                     <input
                       type="checkbox"
                       checked={settings.notifications.highRiskAlert}
                       onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, highRiskAlert: e.target.checked}})}
                       style={{ width: '18px', height: '18px' }}
                     />
-                    <span style={{ fontSize: '14px', color: '#374151' }}>Alert on high-risk claims</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>High Risk Claims</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Alert when a claim is flagged as high-risk</div>
+                    </div>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.bulkActionComplete}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, bulkActionComplete: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Bulk Actions Complete</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Notify when bulk approve/reject is completed</div>
+                    </div>
                   </label>
                 </div>
+              </div>
 
-                <div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+              {/* Zone & Location Notifications */}
+              <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  📍 Zone & Location Alerts
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
                     <input
                       type="checkbox"
                       checked={settings.notifications.zoneViolationAlert}
                       onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, zoneViolationAlert: e.target.checked}})}
                       style={{ width: '18px', height: '18px' }}
                     />
-                    <span style={{ fontSize: '14px', color: '#374151' }}>Alert on zone violations</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Zone Violations</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Alert when claim is submitted outside authorized zone</div>
+                    </div>
                   </label>
                 </div>
+              </div>
 
-                <div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+              {/* Maintenance Notifications */}
+              <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🔧 Maintenance Alerts
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.maintenanceDue}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, maintenanceDue: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Vehicle Maintenance Due</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Alert when vehicle maintenance is due</div>
+                    </div>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.licenseExpiry}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, licenseExpiry: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>License Expiry</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Alert when vehicle license is about to expire</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Fuel Quota Notifications */}
+              <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  ⛽ Fuel Quota Alerts
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.fuelQuotaLow}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, fuelQuotaLow: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Low Fuel Quota Warning</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Alert when employee fuel quota is below 20%</div>
+                    </div>
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.thresholdAlerts}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, thresholdAlerts: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Budget Threshold Alerts</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Alert when monthly fuel budget exceeds threshold</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Reports & Summaries */}
+              <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  📊 Reports & Summaries
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
                     <input
                       type="checkbox"
                       checked={settings.notifications.dailySummaryReport}
                       onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, dailySummaryReport: e.target.checked}})}
                       style={{ width: '18px', height: '18px' }}
                     />
-                    <span style={{ fontSize: '14px', color: '#374151' }}>Daily summary report</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Daily Summary Report</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Send daily summary email to administrators</div>
+                    </div>
                   </label>
-                </div>
 
-                <div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
                     <input
                       type="checkbox"
                       checked={settings.notifications.weeklyReportEmail}
                       onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, weeklyReportEmail: e.target.checked}})}
                       style={{ width: '18px', height: '18px' }}
                     />
-                    <span style={{ fontSize: '14px', color: '#374151' }}>Weekly report email</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Weekly Report Email</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Send comprehensive weekly report every Monday</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* System Notifications */}
+              <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  ⚙️ System Updates
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '10px', background: 'white', borderRadius: '8px' }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.systemUpdates}
+                      onChange={(e) => setSettings({...settings, notifications: {...settings.notifications, systemUpdates: e.target.checked}})}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>System Updates</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Notify about system updates, upgrades, and downtime</div>
+                    </div>
                   </label>
                 </div>
               </div>
